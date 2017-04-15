@@ -100,4 +100,4 @@ exports.apiStr = function (inst, filters = [], indent = '  ') {
     join('\n');
 };
 
-})(window.apivis = {});
+})((typeof window != 'undefined') ? window.apivis = {} : exports);
