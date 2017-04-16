@@ -1,6 +1,6 @@
 {
   "name": "apivis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple JavaScript objects API visualization",
   "main": "apivis.js",
   "scripts": {
