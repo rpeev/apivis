@@ -51,7 +51,11 @@ exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
       let v = null;
 
       try {
-        v = inst[k];
+        let o = (['constructor', 'prototype'].includes(k)) ?
+          obj :
+          inst;
+
+        v = o[k];
       } catch (err) {
         v = err;
       }
