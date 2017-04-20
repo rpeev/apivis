@@ -6,7 +6,7 @@
 
 (function (exports) {
 
-exports.typeStr = function (obj) {
+exports.typeStr = function (obj, k = undefined) {
   let t = Object.prototype.toString.call(obj).
     match(/^\[object ([^\]]*)\]$/)[1];
 
@@ -16,6 +16,16 @@ exports.typeStr = function (obj) {
   ) {
     t = (obj.constructor.name) ?
       obj.constructor.name :
+      'AnonymousConstructor';
+  }
+
+  if (t == 'Function' &&
+    obj.hasOwnProperty &&
+    obj.hasOwnProperty('prototype') &&
+    (!k || ['constructor', '__proto__'].includes(k) || k.match(/^[A-Z]/))
+  ) {
+    t = (obj.name) ?
+      obj.name :
       'AnonymousConstructor';
   }
 
@@ -73,7 +83,7 @@ exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
         v = err;
       }
 
-      return `${indent.repeat(level)}${k}: ${exports.typeStr(v)}`;
+      return `${indent.repeat(level)}${k}: ${exports.typeStr(v, k)}`;
     }).
     join('\n');
 };
