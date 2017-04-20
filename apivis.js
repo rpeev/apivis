@@ -23,6 +23,14 @@ exports.typeStr = function (obj) {
     t = `${t}(${obj.length})`;
   }
 
+  if (obj &&
+    obj.hasOwnProperty &&
+    obj.hasOwnProperty('constructor') &&
+    !t.endsWith('Prototype')
+  ) {
+    t = `${t}.prototype`;
+  }
+
   if (obj instanceof Error &&
     obj.message
   ) {
