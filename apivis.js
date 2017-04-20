@@ -66,7 +66,9 @@ exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
           obj :
           inst;
 
-        v = o[k];
+        if (!['arguments', 'callee', 'caller'].includes(k)) {
+          v = o[k];
+        }
       } catch (err) {
         v = err;
       }
