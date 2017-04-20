@@ -16,14 +16,14 @@ exports.typeStr = function (obj) {
     t = obj.constructor.name;
   }
 
+  if (obj instanceof Function) {
+    t = `${t}(${obj.length})`;
+  }
+
   if (obj instanceof Error &&
     obj.message
   ) {
     t = `${t}("${obj.message}")`;
-  }
-
-  if (obj instanceof Function) {
-    t = `${t}(${obj.length})`;
   }
 
   return t;
