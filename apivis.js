@@ -11,9 +11,12 @@ exports.typeStr = function (obj) {
     match(/^\[object ([^\]]*)\]$/)[1];
 
   if (t == 'Object' &&
-    obj.constructor && obj.constructor.name
+    obj.constructor &&
+    obj.constructor.name != 'Object'
   ) {
-    t = obj.constructor.name;
+    t = (obj.constructor.name) ?
+      obj.constructor.name :
+      'AnonymousConstructor';
   }
 
   if (obj instanceof Function) {
