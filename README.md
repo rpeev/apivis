@@ -24,7 +24,7 @@ npm install apivis
 
 The following functions are available through the **apivis** (or the returned from `require('apivis')` in **node**) object:
 
-- `typeStr(obj)` - returns type string for `obj` (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
+- `typeStr(obj, k = undefined)` - returns type string for `obj` with optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
 
 - `privateMembers(obj)` - returns an object containing the key/value pairs for the keys in `obj` beginning with underscore (considers all properties, not just the own ones)
 
