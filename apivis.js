@@ -22,7 +22,7 @@ exports.typeStr = function (obj, k = undefined) {
   if (t == 'Function' &&
     obj.hasOwnProperty &&
     obj.hasOwnProperty('prototype') &&
-    (!k || ['constructor', '__proto__'].includes(k) || k.match(/^[A-Z]/))
+    (!k || ['constructor', '__proto__'].includes(k) || k.toString().match(/^[A-Z]/))
   ) {
     t = (obj.name) ?
       obj.name :
@@ -63,13 +63,19 @@ exports.privateMembers = function (obj) {
 };
 
 exports.props = function (obj) {
-  return Object.getOwnPropertyNames(obj).sort();
+  return Object.getOwnPropertySymbols(obj).sort((a, b) => {
+    let sa = a.toString(), sb = b.toString();
+
+    return (sa < sb) ? -1 :
+      (sa > sb) ? 1 :
+        0;
+  }).concat(Object.getOwnPropertyNames(obj).sort());
 };
 
 exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
   return exports.props(obj).
     map(k => {
-      let v = null;
+      let v = undefined;
 
       try {
         let o = (['constructor', 'prototype'].includes(k)) ?
@@ -83,7 +89,7 @@ exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
         v = err;
       }
 
-      return `${indent.repeat(level)}${k}: ${exports.typeStr(v, k)}`;
+      return `${indent.repeat(level)}${k.toString()}: ${exports.typeStr(v, k)}`;
     }).
     join('\n');
 };
@@ -104,7 +110,7 @@ exports.protos = function (obj) {
 exports.protosStr = function (obj, indent = '  ') {
   return exports.protos(obj).
     reverse().
-    map((o, i) => `${indent.repeat(i)}${(i != 0) ? '\u25b2' : ''}${exports.typeStr(o)}`).
+    map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]`).
     join('\n');
 };
 
@@ -123,7 +129,7 @@ exports.apiStr = function (inst, filters = [], indent = '  ') {
 
   return chain.
     reverse().
-    map((o, i) => `${indent.repeat(i)}${(i != 0) ? '\u25b2' : ''}${exports.typeStr(o)}\n${exports.propsStr(o, inst, indent, i + 1)}`).
+    map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]\n${exports.propsStr(o, inst, indent, i + 1)}`).
     join('\n');
 };
 
