@@ -28,9 +28,9 @@ The following functions are available through the **apivis** (or the returned fr
 
 - `privateMembers(obj)` - returns an object containing the key/value pairs for the keys in `obj` beginning with underscore (considers all properties, not just the own ones)
 
-- `props(obj)` - returns (sorted) array of all *own* `obj` property names
+- `props(obj)` - returns (sorted) array of all *own* `obj` property names (including symbols)
 
-- `propsStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names (including type information, separated by a newline and indented accordingly). The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`) for evaluating properties on prototypes higher in the chain
+- `propsStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names (including type information, separated by a newline and indented accordingly). The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`) for evaluating properties on prototypes higher up the chain
 
 - `protos(obj)` - returns the prototype chain for `obj` (an array, the root is last)
 
