@@ -1,5 +1,12 @@
 # Release Notes
 
+## 2.0.0
+
+API changes
+
+- remove `privateMembers`
+- rename `props`, `propsStr`, `protos` and `protosStr` to `members`, `membersStr`, `chain` and `chainStr`
+
 ## 1.3.0
 
 - Include symbol keyed properties

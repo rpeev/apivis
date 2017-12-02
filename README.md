@@ -26,15 +26,13 @@ The following functions are available through the **apivis** (or the returned fr
 
 - `typeStr(obj, k = undefined)` - returns type string for `obj` with optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
 
-- `privateMembers(obj)` - returns an object containing the key/value pairs for the keys in `obj` beginning with underscore (considers all properties, not just the own ones)
+- `members(obj)` - returns (sorted) array of all *own* `obj` property names (including symbols)
 
-- `props(obj)` - returns (sorted) array of all *own* `obj` property names (including symbols)
+- `membersStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names (including type information, separated by a newline and indented accordingly). The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`) for evaluating properties on prototypes higher up the chain
 
-- `propsStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names (including type information, separated by a newline and indented accordingly). The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`) for evaluating properties on prototypes higher up the chain
+- `chain(obj)` - returns the prototype chain for `obj` (an array, the root is last)
 
-- `protos(obj)` - returns the prototype chain for `obj` (an array, the root is last)
-
-- `protosStr(obj, indent = '  ')` - returns string representation for `obj` prototype chain
+- `chainStr(obj, indent = '  ')` - returns string representation for `obj` prototype chain
 
 - `apiStr(inst, filters = [], indent = '  ')` - returns string representation of `inst` API tree. Supports prototype name filtering (either a string or an array of strings containing (part of) prototype name)
 

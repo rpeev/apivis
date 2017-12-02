@@ -50,19 +50,7 @@ exports.typeStr = function (obj, k = undefined) {
   return t;
 };
 
-exports.privateMembers = function (obj) {
-  let pms = {};
-
-  for (let k in obj) {
-    if (k.startsWith('_')) {
-      pms[k] = obj[k];
-    }
-  }
-
-  return pms;
-};
-
-exports.props = function (obj) {
+exports.members = function (obj) {
   return Object.getOwnPropertySymbols(obj).sort((a, b) => {
     let sa = a.toString(), sb = b.toString();
 
@@ -72,8 +60,8 @@ exports.props = function (obj) {
   }).concat(Object.getOwnPropertyNames(obj).sort());
 };
 
-exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
-  return exports.props(obj).
+exports.membersStr = function (obj, inst = obj, indent = '  ', level = 0) {
+  return exports.members(obj).
     map(k => {
       let v = undefined;
 
@@ -94,7 +82,7 @@ exports.propsStr = function (obj, inst = obj, indent = '  ', level = 0) {
     join('\n');
 };
 
-exports.protos = function (obj) {
+exports.chain = function (obj) {
   let chain = [];
 
   for (let proto = Object.getPrototypeOf(obj);
@@ -107,15 +95,15 @@ exports.protos = function (obj) {
   return chain;
 };
 
-exports.protosStr = function (obj, indent = '  ') {
-  return exports.protos(obj).
+exports.chainStr = function (obj, indent = '  ') {
+  return exports.chain(obj).
     reverse().
     map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]`).
     join('\n');
 };
 
 exports.apiStr = function (inst, filters = [], indent = '  ') {
-  let chain = exports.protos(inst);
+  let chain = exports.chain(inst);
 
   chain.unshift(inst);
 
@@ -129,7 +117,7 @@ exports.apiStr = function (inst, filters = [], indent = '  ') {
 
   return chain.
     reverse().
-    map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]\n${exports.propsStr(o, inst, indent, i + 1)}`).
+    map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]\n${exports.membersStr(o, inst, indent, i + 1)}`).
     join('\n');
 };
 
