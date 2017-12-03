@@ -83,7 +83,7 @@ exports.membersStr = function (obj, inst = obj, indent = '  ', level = 0) {
 };
 
 exports.chain = function (obj) {
-  let chain = [];
+  let chain = [obj];
 
   for (let proto = Object.getPrototypeOf(obj);
     proto;
@@ -104,8 +104,6 @@ exports.chainStr = function (obj, indent = '  ') {
 
 exports.apiStr = function (inst, filters = [], indent = '  ') {
   let chain = exports.chain(inst);
-
-  chain.unshift(inst);
 
   if (filters.length > 0) {
     if (typeof filters == 'string') {
