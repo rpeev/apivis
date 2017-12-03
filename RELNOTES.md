@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.1.0
+
+`apivis.chain(obj)` now includes `obj`
+
 ## 2.0.0
 
 API changes
