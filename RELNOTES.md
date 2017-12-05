@@ -1,5 +1,13 @@
 # Release Notes
 
+## 3.0.0
+
+- Add `apivis.descStr(obj, k)` to show own property descriptor string for `k` (in the form `vw ec` or `g c` for example, where each letter shows if the prop is value and writable or getter and setter and if it is enumerable and configurable)
+- Show the prop desc string in `apivis.membersStr` (between `{}` after the prop name)
+- Show function arity in `apivis.typeStr` in the form `fn([arg1, ..., argN])` instead of `fn(arity)`
+- Show the values of primitive booleans, numbers and strings in `apivis.membersStr`
+- Improve `apivis.membersStr` heuristic for resolving props against the instance vs objects higher up the proto chain to show how props are shadowed throughout the API hierarchy in `apivis.apiStr`
+
 ## 2.1.0
 
 `apivis.chain(obj)` now includes `obj`

@@ -64,7 +64,7 @@ exports.descStr = function (obj, k) {
   let desc = Object.getOwnPropertyDescriptor(obj, k),
     d1 = '', d2 = '';
 
-  if (!desc) { return undefined; }
+  if (!desc) { return desc; }
 
   if (desc.hasOwnProperty('value')) { d1 += 'v'; }
   if (desc.writable) { d1 += 'w'; }
@@ -110,7 +110,7 @@ exports.membersStr = function (obj, inst = obj, indent = '  ', level = 0) {
       }
 
       // Then try resolving k in the context of obj (reached through
-      // following __proto__) to eventyally get a shadowed value (some
+      // following __proto__) to eventually get a shadowed value (some
       // props only make sense when resolved in the context of inst
       // and an exception will be thrown upon trying to access them through obj)
       try {

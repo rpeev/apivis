@@ -24,13 +24,15 @@ npm install apivis
 
 The following functions are available through the **apivis** (or the returned from `require('apivis')` in **node**) object:
 
-- `typeStr(obj, k = undefined)` - returns type string for `obj` with optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
+- `typeStr(obj, k = undefined)` - returns type string for `obj` using optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
+
+- `descStr(obj, k)` - returns own property descriptor string for `k` in `obj` in the form `vw ec` or `g c` for example, where each letter shows if the prop is value and writable or getter and setter and if it is enumerable and configurable
 
 - `members(obj)` - returns (sorted) array of all *own* `obj` property names (including symbols)
 
-- `membersStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names (including type information, separated by a newline and indented accordingly). The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`) for evaluating properties on prototypes higher up the chain
+- `membersStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names including type and own property descriptor information and the values for the primitive booleans, numbers and strings, separated by a newline and indented accordingly. The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`)
 
-- `chain(obj)` - returns the prototype chain for `obj` (an array, the root is last)
+- `chain(obj)` - returns the prototype chain for `obj` (an array, `obj` is first, the root is last)
 
 - `chainStr(obj, indent = '  ')` - returns string representation for `obj` prototype chain
 
