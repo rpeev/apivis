@@ -6,6 +6,16 @@
 
 (function (exports) {
 
+function argsStr(count, name = 'arg') {
+  let args = [];
+
+  for (let i = 0; i < count; i++) {
+    args.push(`${name}${i + 1}`);
+  }
+
+  return args.join(', ');
+}
+
 exports.typeStr = function (obj, k = undefined) {
   let t = Object.prototype.toString.call(obj).
     match(/^\[object ([^\]]*)\]$/)[1];
@@ -30,7 +40,7 @@ exports.typeStr = function (obj, k = undefined) {
   }
 
   if (obj instanceof Function) {
-    t = `${t}(${obj.length})`;
+    t = `${t}(${argsStr(obj.length)})`;
   }
 
   if (obj &&
@@ -50,6 +60,22 @@ exports.typeStr = function (obj, k = undefined) {
   return t;
 };
 
+exports.descStr = function (obj, k) {
+  let desc = Object.getOwnPropertyDescriptor(obj, k),
+    d1 = '', d2 = '';
+
+  if (!desc) { return undefined; }
+
+  if (desc.hasOwnProperty('value')) { d1 += 'v'; }
+  if (desc.writable) { d1 += 'w'; }
+  if (desc.get) { d1 += 'g'; }
+  if (desc.set) { d1 += 's'; }
+  if (desc.enumerable) { d2 += 'e'; }
+  if (desc.configurable) { d2 += 'c'; }
+
+  return (d2) ? `${d1} ${d2}` : d1;
+};
+
 exports.members = function (obj) {
   return Object.getOwnPropertySymbols(obj).sort((a, b) => {
     let sa = a.toString(), sb = b.toString();
@@ -63,21 +89,50 @@ exports.members = function (obj) {
 exports.membersStr = function (obj, inst = obj, indent = '  ', level = 0) {
   return exports.members(obj).
     map(k => {
-      let v = undefined;
+      let skip = [ // Do not attempt to resolve these
+          'arguments',
+          'callee',
+          'caller'
+        ],
+        instOnly = [ // Only resolve these in the context of inst
+          '__proto__'
+        ],
+        v = undefined,
+        sv = '';
 
+      // First resolve k in the context of inst (like it would be normally)
       try {
-        let o = (['constructor', 'prototype'].includes(k)) ?
-          obj :
-          inst;
-
-        if (!['arguments', 'callee', 'caller'].includes(k)) {
-          v = o[k];
+        if (!skip.includes(k)) {
+          v = inst[k];
         }
       } catch (err) {
-        v = err;
+        v = err; // Make the error visible in the dump
       }
 
-      return `${indent.repeat(level)}${k.toString()}: ${exports.typeStr(v, k)}`;
+      // Then try resolving k in the context of obj (reached through
+      // following __proto__) to eventyally get a shadowed value (some
+      // props only make sense when resolved in the context of inst
+      // and an exception will be thrown upon trying to access them through obj)
+      try {
+        if ( !(obj === inst || instOnly.includes(k) || skip.includes(k)) ) {
+          v = obj[k];
+        }
+      } catch (err) {
+        // Leave v as set by trying to resolve k in the context of inst
+      }
+
+      // Show the values of primitive booleans, numbers and strings
+      switch (typeof v) {
+      case 'boolean':
+      case 'number':
+        sv = `(${v})`;
+        break;
+      case 'string':
+        sv = `("${v}")`;
+        break;
+      }
+
+      return `${indent.repeat(level)}${k.toString()}{${exports.descStr(obj, k)}}: ${exports.typeStr(v, k)}${sv}`;
     }).
     join('\n');
 };
