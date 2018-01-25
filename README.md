@@ -4,6 +4,8 @@ Simple JavaScript objects API visualization
 
 ![Screenshot](./screenshot.png)
 
+## [Demos](https://rpeev.github.io/apivis/)
+
 ## Install
 
 ### In a html page
