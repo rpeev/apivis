@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en" style="font-family: Avenir, sans-serif;">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>ApiVis - example</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/monofur.css" />
+    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/peek42.css" />
+    <script src="https://unpkg.com/apivis@latest/apivis.js"></script>
+    <script src="https://unpkg.com/peek42@latest/peek42.js"></script>
+
+    <script>
+function pageEnv() {
+  let snip = (str, n) => str.trimLeft().
+    replace(/\s+/gm, ' ').
+    substr(0, n) + ((n < str.length) ? '...' : '');
+
+  return [].slice.call(document.scripts).
+    map(script => script.src || 'code: ' + snip(script.textContent, 101)).
+    join('\n');
+}
+
+//Peek42.noop();
+
+document.addEventListener('DOMContentLoaded', function () {
+  let peek42 = Peek42.defInst,
+    p42dom = peek42.dom();
+
+  p(pageEnv(), 'Environment');
+  p.chain(document);
+
+  peek42.show();
+  p42dom.eval.value = 'api document';
+});
+    </script>
+  </head>
+
+  <body>
+<h1 id="about">ApiVis - example [<a href="./index.html">Index</a>]</h1>
+
+<p>Click the input box. Press enter to evaluate the pre-filled expression. Prefix with one of t(ype), m(embers), c(hain), a(pi) to see different representations.
+</p>
+  </body>
+</html>
