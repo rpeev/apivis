@@ -6,13 +6,27 @@
 
     <title>ApiVis</title>
 
+    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/monofur.css" />
+    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/peek42.css" />
     <script src="./apivis.js"></script>
+    <script src="https://unpkg.com/peek42@latest/peek42.js"></script>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-  let out = document.getElementById('out');
+function pageEnv() {
+  let snip = (str, n) => str.trimLeft().
+    replace(/\s+/gm, ' ').
+    substr(0, n) + ((n < str.length) ? '...' : '');
 
-  out.textContent = `document object API tree\n\n${apivis.apiStr(document)}`;
+  return [].slice.call(document.scripts).
+    map(script => script.src || 'code: ' + snip(script.textContent, 101)).
+    join('\n');
+}
+
+//Peek42.noop();
+
+document.addEventListener('DOMContentLoaded', function () {
+  p(pageEnv(), 'Environment');
+  p.api(document);
 });
     </script>
   </head>
@@ -20,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
   <body>
 <h1 id="about">ApiVis</h1>
 
-<pre id="out"></pre>
+<p>document object API tree.
+</p>
   </body>
 </html>
