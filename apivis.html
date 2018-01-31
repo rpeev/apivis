@@ -12,20 +12,9 @@
     <script src="https://unpkg.com/peek42@latest/peek42.js"></script>
 
     <script>
-function pageEnv() {
-  let snip = (str, n) => str.trimLeft().
-    replace(/\s+/gm, ' ').
-    substr(0, n) + ((n < str.length) ? '...' : '');
-
-  return [].slice.call(document.scripts).
-    map(script => script.src || 'code: ' + snip(script.textContent, 101)).
-    join('\n');
-}
-
 //Peek42.noop();
 
 document.addEventListener('DOMContentLoaded', function () {
-  p(pageEnv(), 'Environment');
   p.api(document);
 });
     </script>
