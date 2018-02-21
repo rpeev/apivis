@@ -1,8 +1,9 @@
 {
   "name": "apivis",
   "version": "3.0.0",
-  "description": "Simple JavaScript objects API visualization",
+  "description": "JavaScript objects API visualization",
   "keywords": [
+    "JavaScript",
     "API",
     "visualization"
   ],

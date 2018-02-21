@@ -1,6 +1,6 @@
 # ApiVis
 
-Simple JavaScript objects API visualization
+JavaScript objects API visualization
 
 ![Screenshot](./screenshot.png)
 
