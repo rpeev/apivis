@@ -1,5 +1,5 @@
 /*
-  ApiVis - Simple JavaScript objects API visualization
+  ApiVis - JavaScript objects API visualization
 
   Copyright (c) 2017 Radoslav Peev <rpeev@ymail.com> (MIT License)
 */
