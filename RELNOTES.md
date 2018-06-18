@@ -1,5 +1,9 @@
 # Release Notes
 
+## 4.0.1
+
+- Add .npmignore file to include rollup output in the npm package ignored due to .gitignore
+
 ## 4.0.0
 
 - Use rollup to build ES module, node and browser bundles
