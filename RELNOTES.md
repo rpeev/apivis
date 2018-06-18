@@ -1,5 +1,9 @@
 # Release Notes
 
+## 4.0.0
+
+- Use rollup to build ES module, node and browser bundles
+
 ## 3.0.0
 
 - Add `apivis.descStr(obj, k)` to show own property descriptor string for `k` (in the form `vw ec` or `g c` for example, where each letter shows if the prop is value and writable or getter and setter and if it is enumerable and configurable)

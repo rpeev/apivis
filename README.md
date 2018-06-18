@@ -8,12 +8,10 @@ JavaScript objects API visualization
 
 ## Install
 
-### In a html page
-
-Reference **apivis.js**:  
+### Script tag
 
 ```html
-<script src="path/to/apivis.js"></script>
+<script src="https://unpkg.com/apivis@latest/dist/apivis.umd.js"></script>
 ```
 
 ### Node.js
@@ -24,9 +22,9 @@ npm install apivis
 
 ## Use
 
-The following functions are available through the **apivis** (or the returned from `require('apivis')` in **node**) object:
+The following functions are available through the **apivis** (or the returned from `require('apivis')` in **node**) object ([ES module](https://unpkg.com/apivis@latest/dist/apivis.es.js) is available with **apivis** as default export and all the functions as named exports):
 
-- `typeStr(obj, k = undefined)` - returns type string for `obj` using optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
+- `typeStr(obj[, k])` - returns type string for `obj` using optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
 
 - `descStr(obj, k)` - returns own property descriptor string for `k` in `obj` in the form `vw ec` or `g c` for example, where each letter shows if the prop is value and writable or getter and setter and if it is enumerable and configurable
 
