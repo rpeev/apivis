@@ -1,10 +1,8 @@
 /*
   ApiVis - JavaScript objects API visualization
 
-  Copyright (c) 2017 Radoslav Peev <rpeev@ymail.com> (MIT License)
+  Copyright (c) 2018 Radoslav Peev <rpeev@ymail.com> (MIT License)
 */
-
-(function (exports) {
 
 function argsStr(count, name = 'arg') {
   let args = [];
@@ -16,7 +14,7 @@ function argsStr(count, name = 'arg') {
   return args.join(', ');
 }
 
-exports.typeStr = function (obj, k = undefined) {
+function typeStr(obj, k) {
   let t = Object.prototype.toString.call(obj).
     match(/^\[object ([^\]]*)\]$/)[1];
 
@@ -58,11 +56,12 @@ exports.typeStr = function (obj, k = undefined) {
   }
 
   return t;
-};
+}
 
-exports.descStr = function (obj, k) {
-  let desc = Object.getOwnPropertyDescriptor(obj, k),
-    d1 = '', d2 = '';
+function descStr(obj, k) {
+  let desc = Object.getOwnPropertyDescriptor(obj, k);
+  let d1 = '';
+  let d2 = '';
 
   if (!desc) { return desc; }
 
@@ -74,9 +73,9 @@ exports.descStr = function (obj, k) {
   if (desc.configurable) { d2 += 'c'; }
 
   return (d2) ? `${d1} ${d2}` : d1;
-};
+}
 
-exports.members = function (obj) {
+function members(obj) {
   return Object.getOwnPropertySymbols(obj).sort((a, b) => {
     let sa = a.toString(), sb = b.toString();
 
@@ -84,21 +83,23 @@ exports.members = function (obj) {
       (sa > sb) ? 1 :
         0;
   }).concat(Object.getOwnPropertyNames(obj).sort());
-};
+}
 
-exports.membersStr = function (obj, inst = obj, indent = '  ', level = 0) {
-  return exports.members(obj).
+function membersStr(obj, inst = obj, indent = '  ', level = 0) {
+  return members(obj).
     map(k => {
-      let skip = [ // Do not attempt to resolve these
-          'arguments',
-          'callee',
-          'caller'
-        ],
-        instOnly = [ // Only resolve these in the context of inst
-          '__proto__'
-        ],
-        v = undefined,
-        sv = '';
+      // Do not attempt to resolve these
+      let skip = [
+        'arguments',
+        'callee',
+        'caller'
+      ];
+      // Only resolve these in the context of inst
+      let instOnly = [
+        '__proto__'
+      ];
+      let v;
+      let sv = '';
 
       // First resolve k in the context of inst (like it would be normally)
       try {
@@ -132,46 +133,65 @@ exports.membersStr = function (obj, inst = obj, indent = '  ', level = 0) {
         break;
       }
 
-      return `${indent.repeat(level)}${k.toString()}{${exports.descStr(obj, k)}}: ${exports.typeStr(v, k)}${sv}`;
+      return `${indent.repeat(level)}${k.toString()}{${descStr(obj, k)}}: ${typeStr(v, k)}${sv}`;
     }).
     join('\n');
-};
+}
 
-exports.chain = function (obj) {
-  let chain = [obj];
+function chain(obj) {
+  let objs = [obj];
 
   for (let proto = Object.getPrototypeOf(obj);
     proto;
     proto = Object.getPrototypeOf(proto)
   ) {
-    chain.push(proto);
+    objs.push(proto);
   }
 
-  return chain;
-};
+  return objs;
+}
 
-exports.chainStr = function (obj, indent = '  ') {
-  return exports.chain(obj).
+function chainStr(obj, indent = '  ') {
+  return chain(obj).
     reverse().
-    map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]`).
+    map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]`).
     join('\n');
-};
+}
 
-exports.apiStr = function (inst, filters = [], indent = '  ') {
-  let chain = exports.chain(inst);
+function apiStr(inst, filters = [], indent = '  ') {
+  let objs = chain(inst);
 
   if (filters.length > 0) {
     if (typeof filters == 'string') {
       filters = [filters];
     }
 
-    chain = chain.filter(o => filters.some(f => exports.typeStr(o).includes(f)));
+    objs = objs.filter(o => filters.some(f => typeStr(o).includes(f)));
   }
 
-  return chain.
+  return objs.
     reverse().
-    map((o, i) => `${indent.repeat(i)}[${exports.typeStr(o)}]\n${exports.membersStr(o, inst, indent, i + 1)}`).
+    map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]\n${membersStr(o, inst, indent, i + 1)}`).
     join('\n');
+}
+
+const apivis = {
+  typeStr,
+  descStr,
+  members,
+  membersStr,
+  chain,
+  chainStr,
+  apiStr
 };
 
-})((typeof window != 'undefined') ? window.apivis = {} : exports);
+export {
+  typeStr,
+  descStr,
+  members,
+  membersStr,
+  chain,
+  chainStr,
+  apiStr
+};
+export default apivis;

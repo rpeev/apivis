@@ -7,6 +7,8 @@
     "API",
     "visualization"
   ],
+  "author": "Radoslav Peev <rpeev@ymail.com>",
+  "license": "MIT",
   "homepage": "https://github.com/rpeev/apivis#readme",
   "repository": {
     "type": "git",
@@ -15,10 +17,13 @@
   "bugs": {
     "url": "https://github.com/rpeev/apivis/issues"
   },
-  "author": "Radoslav Peev <rpeev@ymail.com>",
-  "license": "MIT",
-  "main": "apivis.js",
+  "module": "./dist/apivis.es.js",
+  "main": "./dist/apivis.cjs.js",
+  "browser": "./dist/apivis.umd.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "apivis1": "file:apivis1-3.0.0.tgz"
   }
 }
