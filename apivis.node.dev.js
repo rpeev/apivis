@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+'use strict';
 
-let apivis = require('./src/apivis');
+const apivis = require('./src/apivis');
+  const {apiStr} = apivis;
 
-console.log(apivis.apiStr(process));
+console.log(apiStr(process));
