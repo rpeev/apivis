@@ -22,8 +22,5 @@
   "browser": "./dist/apivis.umd.js",
   "scripts": {
     "build": "rollup -c"
-  },
-  "dependencies": {
-    "apivis1": "file:apivis1-3.0.0.tgz"
   }
 }
