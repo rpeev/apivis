@@ -8,34 +8,34 @@ JavaScript objects API visualization
 
 ## Install
 
+### Node.js (contains ES module for use with browser bundlers)
+
+```bash
+npm install apivis
+```
+
 ### Script tag
 
 ```html
 <script src="https://unpkg.com/apivis@latest/dist/apivis.umd.js"></script>
 ```
 
-### Node.js
-
-```bash
-npm install apivis
-```
-
 ## Use
 
-The following functions are available through the **apivis** (or the returned from `require('apivis')` in **node**) object ([ES module](https://unpkg.com/apivis@latest/dist/apivis.es.js) is available with **apivis** as default export and all the functions as named exports):
+The following functions are available through the **apivis** namespace object returned from `require('apivis')` on **node** or available as `window.apivis` in the browser (the ES module has the namespace object as default export and all the functions as named exports):
 
-- `typeStr(obj[, k])` - returns type string for `obj` using optional hint for the `obj` key in a bigger structure (based on the `Object.prototype.toString.call(obj)` trick with a few twists)
+- `typeStr(obj)` - returns type string for `obj` (based on `Object.prototype.toString.call(obj)` with a few twists)
 
 - `descStr(obj, k)` - returns own property descriptor string for `k` in `obj` in the form `vw ec` or `g c` for example, where each letter shows if the prop is value and writable or getter and setter and if it is enumerable and configurable
 
 - `members(obj)` - returns (sorted) array of all *own* `obj` property names (including symbols)
 
-- `membersStr(obj, inst = obj, indent = '  ', level = 0)` - returns string representation for array of property names including type and own property descriptor information and the values for the primitive booleans, numbers and strings, separated by a newline and indented accordingly. The `inst` parameter is used by higher level functions to pass the actual `obj` instance (not the object reached through following the `__proto__`)
+- `membersStr(obj, indent = '  ')` - returns string representation of all *own* `obj` property names (including symbols) with type and own property descriptor information and the values of the primitive booleans, numbers and strings, separated by a newline and indented accordingly
 
-- `chain(obj)` - returns the prototype chain for `obj` (an array, `obj` is first, the root is last)
+- `chain(obj)` - returns the prototype chain of `obj` (an array, `obj` is first, the root is last)
 
-- `chainStr(obj, indent = '  ')` - returns string representation for `obj` prototype chain
+- `chainStr(obj, indent = '  ')` - returns string representation of `obj` prototype chain
 
-- `apiStr(inst, filters = [], indent = '  ')` - returns string representation of `inst` API tree. Supports prototype name filtering (either a string or an array of strings containing (part of) prototype name)
+- `apiStr(obj, indent = '  ')` - returns string representation of `obj` API tree
 
-See **apivis.html** and **apivis.node.js** for browser and node examples respectively.
+See **apivis.node.js** and **apivis.html** for node and browser examples respectively

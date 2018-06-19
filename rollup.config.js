@@ -1,25 +1,23 @@
 import pkg from './package.json';
 
 const config = [{
-  input: './src/apivis.js',
-  output: {
-    format: 'es',
-    file: pkg.module
-  }
-}, {
-  input: './src/apivis.js',
+  input: './src/apivis.cjs.js',
   output: {
     format: 'cjs',
-    file: pkg.main,
-    exports: 'named'
+    file: pkg.main
   }
 }, {
-  input: './src/apivis.js',
+  input: './src/apivis.umd.js',
   output: {
     format: 'umd',
     file: pkg.browser,
-    exports: 'named',
     name: 'apivis'
+  }
+}, {
+  input: './src/apivis.es.js',
+  output: {
+    format: 'es',
+    file: pkg.module
   }
 }];
 

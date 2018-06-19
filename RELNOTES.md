@@ -1,5 +1,9 @@
 # Release Notes
 
+## 5.0.0
+
+- TODO
+
 ## 4.0.1
 
 - Add .npmignore file to include rollup output in the npm package ignored due to .gitignore
