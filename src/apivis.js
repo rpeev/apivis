@@ -165,9 +165,7 @@ function chainStr(obj, indent = '  ') {
 }
 
 function apiStr(obj, indent = '  ') {
-  let objs = chain(obj);
-
-  return objs.
+  return chain(obj).
     reverse().
     map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]\n${membersStr(o, indent, i + 1, obj)}`).
     join('\n');
