@@ -2,7 +2,7 @@
 
 ## 5.0.0
 
-- TODO
+- Improve build infrastructure and clean source
 
 ## 4.0.1
 
@@ -10,7 +10,7 @@
 
 ## 4.0.0
 
-- Use rollup to build ES module, node and browser bundles
+- Use rollup to build node, browser and ES module bundles
 
 ## 3.0.0
 
