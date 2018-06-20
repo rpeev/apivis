@@ -1,8 +1,11 @@
-/*
-  ApiVis - JavaScript objects API visualization
+import {
+  name as LIB_NAME,
+  version as LIB_VERSION
+} from '../package.json';
 
-  Copyright (c) 2018 Radoslav Peev <rpeev@ymail.com> (MIT License)
-*/
+const {
+  toString
+} = Object.prototype;
 
 function argsStr(count, name = 'arg') {
   let args = [];
@@ -15,26 +18,25 @@ function argsStr(count, name = 'arg') {
 }
 
 function typeStr(obj, k) {
-  let t = Object.prototype.toString.call(obj).
+  let t = toString.call(obj).
     match(/^\[object ([^\]]*)\]$/)[1];
 
   if (t == 'Object' &&
     obj.constructor &&
     obj.constructor.name != 'Object'
   ) {
-    t = (obj.constructor.name) ?
-      obj.constructor.name :
-      'AnonymousConstructor';
+    t = (obj.constructor.name) ? obj.constructor.name : 'AnonymousConstructor';
   }
 
   if (t == 'Function' &&
     obj.hasOwnProperty &&
     obj.hasOwnProperty('prototype') &&
-    (!k || ['constructor', '__proto__'].includes(k) || k.toString().match(/^[A-Z]/))
+    (!k ||
+      ['constructor', '__proto__'].includes(k) ||
+      k.toString().match(/^[A-Z]/)
+    )
   ) {
-    t = (obj.name) ?
-      obj.name :
-      'AnonymousConstructor';
+    t = (obj.name) ? obj.name : 'AnonymousConstructor';
   }
 
   if (obj instanceof Function) {
@@ -76,16 +78,20 @@ function descStr(obj, k) {
 }
 
 function members(obj) {
-  return Object.getOwnPropertySymbols(obj).sort((a, b) => {
-    let sa = a.toString(), sb = b.toString();
+  let names = Object.getOwnPropertyNames(obj).sort();
+  let symbols = Object.getOwnPropertySymbols(obj).sort((a, b) => {
+    let sa = a.toString();
+    let sb = b.toString();
 
     return (sa < sb) ? -1 :
       (sa > sb) ? 1 :
         0;
-  }).concat(Object.getOwnPropertyNames(obj).sort());
+  });
+
+  return symbols.concat(names);
 }
 
-function membersStr(obj, inst = obj, indent = '  ', level = 0) {
+function membersStr(obj, indent = '  ', level = 0, leaf = obj) {
   return members(obj).
     map(k => {
       // Do not attempt to resolve these
@@ -94,17 +100,17 @@ function membersStr(obj, inst = obj, indent = '  ', level = 0) {
         'callee',
         'caller'
       ];
-      // Only resolve these in the context of inst
-      let instOnly = [
+      // Only resolve these in the context of leaf
+      let leafOnly = [
         '__proto__'
       ];
       let v;
       let sv = '';
 
-      // First resolve k in the context of inst (like it would be normally)
+      // First resolve k in the context of leaf (like it would be normally)
       try {
         if (!skip.includes(k)) {
-          v = inst[k];
+          v = leaf[k];
         }
       } catch (err) {
         v = err; // Make the error visible in the dump
@@ -112,14 +118,14 @@ function membersStr(obj, inst = obj, indent = '  ', level = 0) {
 
       // Then try resolving k in the context of obj (reached through
       // following __proto__) to eventually get a shadowed value (some
-      // props only make sense when resolved in the context of inst
+      // props only make sense when resolved in the context of leaf
       // and an exception will be thrown upon trying to access them through obj)
       try {
-        if ( !(obj === inst || instOnly.includes(k) || skip.includes(k)) ) {
+        if ( !(obj === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
           v = obj[k];
         }
       } catch (err) {
-        // Leave v as set by trying to resolve k in the context of inst
+        // Leave v as set by trying to resolve k in the context of leaf
       }
 
       // Show the values of primitive booleans, numbers and strings
@@ -158,24 +164,20 @@ function chainStr(obj, indent = '  ') {
     join('\n');
 }
 
-function apiStr(inst, filters = [], indent = '  ') {
-  let objs = chain(inst);
-
-  if (filters.length > 0) {
-    if (typeof filters == 'string') {
-      filters = [filters];
-    }
-
-    objs = objs.filter(o => filters.some(f => typeStr(o).includes(f)));
-  }
+function apiStr(obj, indent = '  ') {
+  let objs = chain(obj);
 
   return objs.
     reverse().
-    map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]\n${membersStr(o, inst, indent, i + 1)}`).
+    map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]\n${membersStr(o, indent, i + 1, obj)}`).
     join('\n');
 }
 
 const apivis = {
+  get [Symbol.toStringTag]() {
+    return LIB_NAME;
+  },
+  version: LIB_VERSION,
   typeStr,
   descStr,
   members,
@@ -185,13 +187,4 @@ const apivis = {
   apiStr
 };
 
-export {
-  typeStr,
-  descStr,
-  members,
-  membersStr,
-  chain,
-  chainStr,
-  apiStr
-};
 export default apivis;

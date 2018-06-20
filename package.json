@@ -22,5 +22,8 @@
   "module": "./dist/apivis.es.js",
   "scripts": {
     "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup-plugin-json": "^3.0.0"
   }
 }

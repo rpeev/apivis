@@ -22,7 +22,9 @@ npm install apivis
 
 ## Use
 
-The following functions are available through the **apivis** namespace object returned from `require('apivis')` on **node** or available as `window.apivis` in the browser (the ES module has the namespace object as default export and all the functions as named exports):
+The following properties/functions are available through the **apivis** namespace object returned from `require('apivis')` on **node** or available as `window.apivis` in the browser (the ES module has the namespace object as default export and all the functions as named exports):
+
+- `version` - library version
 
 - `typeStr(obj)` - returns type string for `obj` (based on `Object.prototype.toString.call(obj)` with a few twists)
 
