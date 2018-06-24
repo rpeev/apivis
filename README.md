@@ -32,7 +32,7 @@ The following properties/functions are available through the **apivis** namespac
 
 - `members(obj)` - returns (sorted) array of all *own* `obj` property names (including symbols)
 
-- `membersStr(obj, indent = '  ')` - returns string representation of all *own* `obj` property names (including symbols) with type and own property descriptor information and the values of the primitive booleans, numbers and strings, separated by a newline and indented accordingly
+- `membersStr(obj, indent = '  ', level = 0)` - returns string representation of all *own* `obj` property names (including symbols) with type and own property descriptor information and the values of the primitive booleans, numbers and strings, separated by a newline and indented accordingly
 
 - `chain(obj)` - returns the prototype chain of `obj` (an array, `obj` is first, the root is last)
 
@@ -40,4 +40,4 @@ The following properties/functions are available through the **apivis** namespac
 
 - `apiStr(obj, indent = '  ')` - returns string representation of `obj` API tree
 
-See **apivis.node.js** and **apivis.html** for node and browser examples respectively
+See **example** folder for node and browser examples respectively
