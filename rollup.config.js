@@ -15,7 +15,10 @@ const config = [{
   },
   plugins: [
     pluginJson
-  ]
+  ],
+  watch: {
+    include: 'src/**'
+  }
 }, {
   input: './src/apivis.js',
   output: {
@@ -26,7 +29,10 @@ const config = [{
   },
   plugins: [
     pluginJson
-  ]
+  ],
+  watch: {
+    include: 'src/**'
+  }
 }, {
   input: './src/apivis.es.js',
   output: {
@@ -36,7 +42,10 @@ const config = [{
   },
   plugins: [
     pluginJson
-  ]
+  ],
+  watch: {
+    include: 'src/**'
+  }
 }];
 
 export default config;
