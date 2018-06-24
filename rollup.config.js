@@ -10,7 +10,8 @@ const config = [{
   input: './src/apivis.js',
   output: {
     format: 'cjs',
-    file: pkg.main
+    file: pkg.main,
+    sourcemap: true
   },
   plugins: [
     pluginJson
@@ -20,7 +21,8 @@ const config = [{
   output: {
     format: 'umd',
     file: pkg.browser,
-    name: pkg.name
+    name: pkg.name,
+    sourcemap: true
   },
   plugins: [
     pluginJson
@@ -29,7 +31,8 @@ const config = [{
   input: './src/apivis.es.js',
   output: {
     format: 'es',
-    file: pkg.module
+    file: pkg.module,
+    sourcemap: true
   },
   plugins: [
     pluginJson
