@@ -24,6 +24,7 @@
     "build": "rollup -c"
   },
   "devDependencies": {
+    "rollup": "^0.61.2",
     "rollup-plugin-json": "^3.0.0"
   }
 }
