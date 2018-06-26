@@ -1,6 +1,6 @@
 # Release Notes
 
-## 5.1.0
+## 5.1.1
 
 - Add peek42 plugin
 
