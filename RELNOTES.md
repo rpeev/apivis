@@ -1,5 +1,9 @@
 # Release Notes
 
+## 5.1.0
+
+- Add peek42 plugin
+
 ## 5.0.0
 
 - Improve build infrastructure and clean source
