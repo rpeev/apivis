@@ -25,7 +25,9 @@ function typeStr(obj, k) {
     obj.constructor &&
     obj.constructor.name != 'Object'
   ) {
-    t = (obj.constructor.name) ? obj.constructor.name : 'AnonymousConstructor';
+    t = (obj.constructor.name) ?
+      obj.constructor.name :
+      'AnonymousConstructor';
   }
 
   if (t == 'Function' &&
@@ -36,7 +38,9 @@ function typeStr(obj, k) {
       k.toString().match(/^[A-Z]/)
     )
   ) {
-    t = (obj.name) ? obj.name : 'AnonymousConstructor';
+    t = (obj.name) ?
+      obj.name :
+      'AnonymousConstructor';
   }
 
   if (obj instanceof Function) {
@@ -74,7 +78,9 @@ function descStr(obj, k) {
   if (desc.enumerable) { d2 += 'e'; }
   if (desc.configurable) { d2 += 'c'; }
 
-  return (d2) ? `${d1} ${d2}` : d1;
+  return (d2) ?
+    `${d1} ${d2}` :
+    d1;
 }
 
 function members(obj) {
@@ -171,6 +177,42 @@ function apiStr(obj, indent = '  ') {
     join('\n');
 }
 
+// peek42 plugin
+function peek42(fnOutput, fnComment) {
+  return {
+    type(arg, comment) {
+      fnOutput(
+        typeStr(arg),
+        fnComment(comment, arg, 'type')
+      );
+    },
+    desc(arg, k, comment) {
+      fnOutput(
+        descStr(arg, k),
+        fnComment(comment, `${String(k)} in ${typeStr(arg)}`, 'desc')
+      );
+    },
+    members(arg, comment) {
+      fnOutput(
+        membersStr(arg),
+        fnComment(comment, typeStr(arg), 'members')
+      );
+    },
+    chain(arg, comment) {
+      fnOutput(
+        chainStr(arg),
+        fnComment(comment, typeStr(arg), 'chain')
+      );
+    },
+    api(arg, comment) {
+      fnOutput(
+        apiStr(arg),
+        fnComment(comment, typeStr(arg), 'api')
+      );
+    }
+  };
+}
+
 const apivis = {
   get [Symbol.toStringTag]() {
     return LIB_NAME;
@@ -182,7 +224,8 @@ const apivis = {
   membersStr,
   chain,
   chainStr,
-  apiStr
+  apiStr,
+  peek42
 };
 
 export default apivis;
