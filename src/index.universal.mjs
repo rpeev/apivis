@@ -1,4 +1,4 @@
-import apivis from './apivis';
+import apivis from './universal/apivis';
 
 const {
   typeStr,

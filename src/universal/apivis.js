@@ -1,7 +1,7 @@
 import {
   name as LIB_NAME,
   version as LIB_VERSION
-} from '../package.json';
+} from '../../package.json';
 
 const {
   toString

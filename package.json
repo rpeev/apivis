@@ -1,6 +1,6 @@
 {
   "name": "apivis",
-  "version": "5.1.1",
+  "version": "6.0.0",
   "description": "JavaScript objects API visualization",
   "keywords": [
     "JavaScript",
@@ -17,9 +17,10 @@
   "bugs": {
     "url": "https://github.com/rpeev/apivis/issues"
   },
-  "main": "./dist/apivis.cjs.js",
-  "browser": "./dist/apivis.umd.js",
-  "module": "./dist/apivis.es.js",
+  "main": "./dist/apivis.node.js",
+  "browser": "./dist/apivis.browser.js",
+  "main_module": "./dist/apivis.universal.mjs",
+  "module": "./dist/apivis.universal.mjs",
   "scripts": {
     "build": "rollup -c"
   },

@@ -7,7 +7,7 @@ const pluginJson = json({
 });
 
 const config = [{
-  input: './src/apivis.js',
+  input: './src/index.universal.js',
   output: {
     format: 'cjs',
     file: pkg.main,
@@ -20,7 +20,7 @@ const config = [{
     include: 'src/**'
   }
 }, {
-  input: './src/apivis.js',
+  input: './src/index.universal.js',
   output: {
     format: 'umd',
     file: pkg.browser,
@@ -34,7 +34,7 @@ const config = [{
     include: 'src/**'
   }
 }, {
-  input: './src/apivis.es.js',
+  input: './src/index.universal.mjs',
   output: {
     format: 'es',
     file: pkg.module,
