@@ -1,14 +1,13 @@
 import apivis from './universal/apivis';
-
-const {
-  typeStr,
-  descStr,
-  members,
-  membersStr,
-  chain,
-  chainStr,
-  apiStr
-} = apivis;
+  const {
+    typeStr,
+    descStr,
+    members,
+    membersStr,
+    chain,
+    chainStr,
+    apiStr
+  } = apivis;
 
 export {
   typeStr,
