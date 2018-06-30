@@ -1,5 +1,10 @@
 # Release Notes
 
+## 6.0.0
+
+- Rename build entry points, outputs and examples
+- Limit string values display to max length
+
 ## 5.1.1
 
 - Add peek42 plugin

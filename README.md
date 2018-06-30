@@ -6,9 +6,19 @@ JavaScript objects API visualization
 
 ## [Demos](https://rpeev.github.io/apivis/)
 
+## Distribution
+
+### unpkg - [https://unpkg.com/apivis/](https://unpkg.com/apivis/)
+
+- node module (CJS) - [https://unpkg.com/apivis@latest/dist/apivis.node.js](https://unpkg.com/apivis@latest/dist/apivis.node.js)
+
+- browser bundle (UMD) - [https://unpkg.com/apivis@latest/dist/apivis.browser.js](https://unpkg.com/apivis@latest/dist/apivis.browser.js)
+
+- universal ES module - [https://unpkg.com/apivis@latest/dist/apivis.universal.mjs](https://unpkg.com/apivis@latest/dist/apivis.universal.mjs)
+
 ## Install
 
-### Node.js (contains ES module for use with browser bundlers)
+### Node.js
 
 ```bash
 npm install apivis
@@ -17,12 +27,12 @@ npm install apivis
 ### Script tag
 
 ```html
-<script src="https://unpkg.com/apivis@latest/dist/apivis.umd.js"></script>
+<script src="https://unpkg.com/apivis@latest/dist/apivis.browser.js"></script>
 ```
 
 ## Use
 
-The following properties/functions are available through the **apivis** namespace object returned from `require('apivis')` on **node** or available as `window.apivis` in the browser (the ES module has the namespace object as default export and all the functions as named exports):
+The following properties/functions are available through the **apivis** namespace object returned from `require('apivis')` on node or available as `window.apivis` in the browser (the ES module has the namespace object as default export and all the functions as named exports):
 
 - `version` - library version
 
