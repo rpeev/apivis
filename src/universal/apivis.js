@@ -112,6 +112,7 @@ function membersStr(obj, indent = '  ', level = 0, leaf = obj) {
       ];
       let v;
       let sv = '';
+      let smax = 101;
 
       // First resolve k in the context of leaf (like it would be normally)
       try {
@@ -139,9 +140,15 @@ function membersStr(obj, indent = '  ', level = 0, leaf = obj) {
       case 'boolean':
       case 'number':
         sv = `(${v})`;
+
         break;
       case 'string':
-        sv = `("${v}")`;
+        if (v.length > smax) {
+          sv = `("${v.substr(0, smax)}...")`;
+        } else {
+          sv = `("${v}")`;
+        }
+
         break;
       }
 
