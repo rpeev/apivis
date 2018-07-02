@@ -22,7 +22,11 @@
   "main_module": "./dist/apivis.universal.mjs",
   "module": "./dist/apivis.universal.mjs",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "gmod:link": "npm link apivis",
+    "pm:stop": "sudo pm2 stop ./pm2.process.json",
+    "pm:start": "sudo pm2 start ./pm2.process.json",
+    "pm:restart": "sudo pm2 restart ./pm2.process.json --update-env"
   },
   "devDependencies": {
     "rollup": "^0.61.2",
