@@ -198,34 +198,46 @@ function apiStr(val, indent = '  ') {
 // peek42 plugin
 function peek42(fnOutput, fnComment) {
   return {
-    type(val, comment) {
+    type(val, comment, opts) {
       fnOutput(
         typeStr(val),
-        fnComment(comment, val, 'type')
+        fnComment(comment, val, 'type'),
+        opts
       );
     },
-    desc(val, k, comment) {
+    desc(val, k, comment, opts) {
       fnOutput(
         descStr(val, k),
-        fnComment(comment, `${String(k)} in ${typeStr(val)}`, 'desc')
+        fnComment(comment, `${String(k)} in ${typeStr(val)}`, 'desc'),
+        opts
       );
     },
-    members(val, comment) {
+    members(val, comment, opts) {
       fnOutput(
-        membersStr(val),
-        fnComment(comment, typeStr(val), 'members')
+        membersStr(val,
+          (opts.indent === undefined) ? undefined : opts.indent,
+          (opts.indentLevel === undefined) ? undefined : opts.indentLevel
+        ),
+        fnComment(comment, typeStr(val), 'members'),
+        opts
       );
     },
-    chain(val, comment) {
+    chain(val, comment, opts) {
       fnOutput(
-        chainStr(val),
-        fnComment(comment, typeStr(val), 'chain')
+        chainStr(val,
+          (opts.indent === undefined) ? undefined : opts.indent
+        ),
+        fnComment(comment, typeStr(val), 'chain'),
+        opts
       );
     },
-    api(val, comment) {
+    api(val, comment, opts) {
       fnOutput(
-        apiStr(val),
-        fnComment(comment, typeStr(val), 'api')
+        apiStr(val,
+          (opts.indent === undefined) ? undefined : opts.indent
+        ),
+        fnComment(comment, typeStr(val), 'api'),
+        opts
       );
     }
   };
