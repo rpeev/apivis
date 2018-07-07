@@ -258,4 +258,5 @@ const apivis = {
   peek42
 };
 
+export {typeStr, descStr, members, membersStr, chain, chainStr, apiStr};
 export default apivis;
