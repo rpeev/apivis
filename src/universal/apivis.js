@@ -14,13 +14,13 @@ function _isBasicObject(val) {
 }
 
 function _argsStr(count, name = 'arg') {
-  let args = [];
+  let names = [];
 
   for (let i = 0; i < count; i++) {
-    args.push(`${name}${i + 1}`);
+    names.push(`${name}${i + 1}`);
   }
 
-  return args.join(', ');
+  return names.join(', ');
 }
 
 function typeStr(obj, k) {
