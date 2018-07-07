@@ -13,7 +13,7 @@ function _isBasicObject(arg) {
     arg.__proto__ === undefined;
 }
 
-function argsStr(count, name = 'arg') {
+function _argsStr(count, name = 'arg') {
   let args = [];
 
   for (let i = 0; i < count; i++) {
@@ -51,7 +51,7 @@ function typeStr(obj, k) {
   }
 
   if (obj instanceof Function) {
-    t = `${t}(${argsStr(obj.length)})`;
+    t = `${t}(${_argsStr(obj.length)})`;
   }
 
   if (obj &&
