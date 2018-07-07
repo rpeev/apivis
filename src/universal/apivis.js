@@ -72,11 +72,17 @@ function typeStr(val, k = undefined) {
 }
 
 function descStr(val, k) {
+  if (val === undefined || val === null) {
+    return 'n/a';
+  }
+
   let desc = Object.getOwnPropertyDescriptor(val, k);
   let d1 = '';
   let d2 = '';
 
-  if (!desc) { return desc; }
+  if (desc === undefined) {
+    return 'n/a';
+  }
 
   if (desc.hasOwnProperty('value')) { d1 += 'v'; }
   if (desc.writable) { d1 += 'w'; }
