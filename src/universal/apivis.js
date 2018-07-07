@@ -7,10 +7,10 @@ const {
   toString
 } = Object.prototype;
 
-function _isBasicObject(arg) {
-  return typeof arg === 'object' &&
-    arg !== null &&
-    arg.__proto__ === undefined;
+function _isBasicObject(val) {
+  return typeof val === 'object' &&
+    val !== null &&
+    val.__proto__ === undefined;
 }
 
 function _argsStr(count, name = 'arg') {
