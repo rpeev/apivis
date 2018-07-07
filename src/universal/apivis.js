@@ -23,56 +23,56 @@ function _argsStr(count, name = 'arg') {
   return names.join(', ');
 }
 
-function typeStr(obj, k) {
-  let t = (_isBasicObject(obj)) ?
+function typeStr(val, k = undefined) {
+  let t = (_isBasicObject(val)) ?
     'BasicObject' :
-    toString.call(obj).match(/^\[object ([^\]]*)\]$/)[1];
+    toString.call(val).match(/^\[object ([^\]]*)\]$/)[1];
 
   if (t == 'Object' &&
-    obj.constructor &&
-    obj.constructor.name != 'Object'
+    val.constructor &&
+    val.constructor.name != 'Object'
   ) {
-    t = (obj.constructor.name) ?
-      obj.constructor.name :
+    t = (val.constructor.name) ?
+      val.constructor.name :
       'AnonymousConstructor';
   }
 
   if (t == 'Function' &&
-    obj.hasOwnProperty &&
-    obj.hasOwnProperty('prototype') &&
+    val.hasOwnProperty &&
+    val.hasOwnProperty('prototype') &&
     (!k ||
       ['constructor', '__proto__'].includes(k) ||
       k.toString().match(/^[A-Z]/)
     )
   ) {
-    t = (obj.name) ?
-      obj.name :
+    t = (val.name) ?
+      val.name :
       'AnonymousConstructor';
   }
 
-  if (obj instanceof Function) {
-    t = `${t}(${_argsStr(obj.length)})`;
+  if (val instanceof Function) {
+    t = `${t}(${_argsStr(val.length)})`;
   }
 
-  if (obj &&
-    obj.hasOwnProperty &&
-    obj.hasOwnProperty('constructor') &&
+  if (val &&
+    val.hasOwnProperty &&
+    val.hasOwnProperty('constructor') &&
     !t.endsWith('Prototype')
   ) {
     t = `${t}.prototype`;
   }
 
-  if (obj instanceof Error &&
-    obj.message
+  if (val instanceof Error &&
+    val.message
   ) {
-    t = `${t}("${obj.message}")`;
+    t = `${t}("${val.message}")`;
   }
 
   return t;
 }
 
-function descStr(obj, k) {
-  let desc = Object.getOwnPropertyDescriptor(obj, k);
+function descStr(val, k) {
+  let desc = Object.getOwnPropertyDescriptor(val, k);
   let d1 = '';
   let d2 = '';
 
@@ -90,9 +90,9 @@ function descStr(obj, k) {
     d1;
 }
 
-function members(obj) {
-  let names = Object.getOwnPropertyNames(obj).sort();
-  let symbols = Object.getOwnPropertySymbols(obj).sort((a, b) => {
+function members(val) {
+  let names = Object.getOwnPropertyNames(val).sort();
+  let symbols = Object.getOwnPropertySymbols(val).sort((a, b) => {
     let sa = a.toString();
     let sb = b.toString();
 
@@ -104,8 +104,8 @@ function members(obj) {
   return symbols.concat(names);
 }
 
-function membersStr(obj, indent = '  ', level = 0, leaf = obj) {
-  return members(obj).
+function membersStr(val, indent = '  ', level = 0, leaf = val) {
+  return members(val).
     map(k => {
       // Do not attempt to resolve these
       let skip = [
@@ -135,8 +135,8 @@ function membersStr(obj, indent = '  ', level = 0, leaf = obj) {
       // props only make sense when resolved in the context of leaf
       // and an exception will be thrown upon trying to access them through obj)
       try {
-        if ( !(obj === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
-          v = obj[k];
+        if ( !(val === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
+          v = val[k];
         }
       } catch (err) {
         // Leave v as set by trying to resolve k in the context of leaf
@@ -159,69 +159,69 @@ function membersStr(obj, indent = '  ', level = 0, leaf = obj) {
         break;
       }
 
-      return `${indent.repeat(level)}${k.toString()}{${descStr(obj, k)}}: ${typeStr(v, k)}${sv}`;
+      return `${indent.repeat(level)}${k.toString()}{${descStr(val, k)}}: ${typeStr(v, k)}${sv}`;
     }).
     join('\n');
 }
 
-function chain(obj) {
-  let objs = [obj];
+function chain(val) {
+  let vals = [val];
 
-  for (let proto = Object.getPrototypeOf(obj);
+  for (let proto = Object.getPrototypeOf(val);
     proto;
     proto = Object.getPrototypeOf(proto)
   ) {
-    objs.push(proto);
+    vals.push(proto);
   }
 
-  return objs;
+  return vals;
 }
 
-function chainStr(obj, indent = '  ') {
-  return chain(obj).
+function chainStr(val, indent = '  ') {
+  return chain(val).
     reverse().
-    map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]`).
+    map((v, i) => `${indent.repeat(i)}[${typeStr(v)}]`).
     join('\n');
 }
 
-function apiStr(obj, indent = '  ') {
-  return chain(obj).
+function apiStr(val, indent = '  ') {
+  return chain(val).
     reverse().
-    map((o, i) => `${indent.repeat(i)}[${typeStr(o)}]\n${membersStr(o, indent, i + 1, obj)}`).
+    map((v, i) => `${indent.repeat(i)}[${typeStr(v)}]\n${membersStr(v, indent, i + 1, val)}`).
     join('\n');
 }
 
 // peek42 plugin
 function peek42(fnOutput, fnComment) {
   return {
-    type(arg, comment) {
+    type(val, comment) {
       fnOutput(
-        typeStr(arg),
-        fnComment(comment, arg, 'type')
+        typeStr(val),
+        fnComment(comment, val, 'type')
       );
     },
-    desc(arg, k, comment) {
+    desc(val, k, comment) {
       fnOutput(
-        descStr(arg, k),
-        fnComment(comment, `${String(k)} in ${typeStr(arg)}`, 'desc')
+        descStr(val, k),
+        fnComment(comment, `${String(k)} in ${typeStr(val)}`, 'desc')
       );
     },
-    members(arg, comment) {
+    members(val, comment) {
       fnOutput(
-        membersStr(arg),
-        fnComment(comment, typeStr(arg), 'members')
+        membersStr(val),
+        fnComment(comment, typeStr(val), 'members')
       );
     },
-    chain(arg, comment) {
+    chain(val, comment) {
       fnOutput(
-        chainStr(arg),
-        fnComment(comment, typeStr(arg), 'chain')
+        chainStr(val),
+        fnComment(comment, typeStr(val), 'chain')
       );
     },
-    api(arg, comment) {
+    api(val, comment) {
       fnOutput(
-        apiStr(arg),
-        fnComment(comment, typeStr(arg), 'api')
+        apiStr(val),
+        fnComment(comment, typeStr(val), 'api')
       );
     }
   };
