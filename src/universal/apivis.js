@@ -7,6 +7,12 @@ const {
   toString
 } = Object.prototype;
 
+function _isBasicObject(arg) {
+  return typeof arg === 'object' &&
+    arg !== null &&
+    arg.__proto__ === undefined;
+}
+
 function argsStr(count, name = 'arg') {
   let args = [];
 
@@ -18,8 +24,9 @@ function argsStr(count, name = 'arg') {
 }
 
 function typeStr(obj, k) {
-  let t = toString.call(obj).
-    match(/^\[object ([^\]]*)\]$/)[1];
+  let t = (_isBasicObject(obj)) ?
+    'BasicObject' :
+    toString.call(obj).match(/^\[object ([^\]]*)\]$/)[1];
 
   if (t == 'Object' &&
     obj.constructor &&
