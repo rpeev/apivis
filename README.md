@@ -8,17 +8,17 @@ JavaScript objects API visualization
 
 ## Distribution
 
-### unpkg - [https://unpkg.com/apivis@latest/dist/](https://unpkg.com/apivis@latest/dist/)
+### Unpkg - [https://unpkg.com/apivis@latest/dist/](https://unpkg.com/apivis@latest/dist/)
 
-- node module (CJS) - [https://unpkg.com/apivis@latest/dist/apivis.node.js](https://unpkg.com/apivis@latest/dist/apivis.node.js)
+- Node module (CJS) - [https://unpkg.com/apivis@latest/dist/apivis.node.js](https://unpkg.com/apivis@latest/dist/apivis.node.js)
 
-- browser bundle (UMD) - [https://unpkg.com/apivis@latest/dist/apivis.browser.js](https://unpkg.com/apivis@latest/dist/apivis.browser.js)
+- Browser bundle (UMD) - [https://unpkg.com/apivis@latest/dist/apivis.browser.js](https://unpkg.com/apivis@latest/dist/apivis.browser.js)
 
-- universal ES module - [https://unpkg.com/apivis@latest/dist/apivis.universal.mjs](https://unpkg.com/apivis@latest/dist/apivis.universal.mjs)
+- Universal ES module - [https://unpkg.com/apivis@latest/dist/apivis.universal.mjs](https://unpkg.com/apivis@latest/dist/apivis.universal.mjs)
 
 ## Install
 
-### Node.js
+### Node
 
 ```bash
 npm install apivis
@@ -34,7 +34,7 @@ All distribution files are in `node_modules/apivis/dist/`
 
 ## Use
 
-### Node.js
+### Node
 
 ```javascript
 const apivis = require('apivis');
@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
 ### ES module
 
 ```javascript
-import apivis, {apiStr} from 'apivis/dist/apivis.universal'; // node
-import apivis, {apiStr} from 'apivis'; // bundlers
+import apivis, {apiStr} from 'apivis/dist/apivis.universal'; // Node
+import apivis, {apiStr} from 'apivis'; // Bundlers
 
-// use the imports
+// Use the imports
 ```
 
 ## API
