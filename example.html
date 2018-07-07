@@ -6,28 +6,24 @@
 
     <title>ApiVis - example</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/monofur.css" />
-    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/peek42.css" />
+    <link rel="stylesheet" href="https://unpkg.com/peek42@latest/dist/peek42.css" />
 
     <script src="https://unpkg.com/apivis@latest/dist/apivis.browser.js"></script>
-    <script src="https://unpkg.com/peek42@latest/peek42.js"></script>
+    <script src="https://unpkg.com/peek42@latest/dist/peek42.browser.js"></script>
 
-    <script> 'use strict';
+    <script>(() => { 'use strict';
+const {apiStr} = apivis;
+
 document.addEventListener('DOMContentLoaded', () => {
-  let peek42 = Peek42.defInst;
-  let p42dom = peek42.dom();
-
-  p.chain(document);
-
-  p42dom.eval.value = 'api document';
+  console.log(apiStr(document));
 });
-    </script>
+    })();</script>
   </head>
 
   <body>
 <h1 id="about">ApiVis - example [<a href="./index.html">Index</a>]</h1>
 
-<p>Click the input box. Press enter to evaluate the pre-filled expression. Prefix with one of t(ype), m(embers), c(hain), a(pi) to see different representations.
+<p>The document object API tree.
 </p>
   </body>
 </html>
