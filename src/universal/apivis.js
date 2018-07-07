@@ -130,10 +130,10 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
         v = err; // Make the error visible in the dump
       }
 
-      // Then try resolving k in the context of obj (reached through
+      // Then try resolving k in the context of val (reached through
       // following __proto__) to eventually get a shadowed value (some
       // props only make sense when resolved in the context of leaf
-      // and an exception will be thrown upon trying to access them through obj)
+      // and an exception will be thrown upon trying to access them through val)
       try {
         if ( !(val === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
           v = val[k];
