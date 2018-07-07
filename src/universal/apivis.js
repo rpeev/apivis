@@ -28,22 +28,20 @@ function typeStr(val, k = undefined) {
     'BasicObject' :
     toString.call(val).match(/^\[object ([^\]]*)\]$/)[1];
 
-  if (t == 'Object' &&
+  if (t === 'Object' &&
     val.constructor &&
-    val.constructor.name != 'Object'
+    val.constructor.name !== 'Object'
   ) {
     t = (val.constructor.name) ?
       val.constructor.name :
       'AnonymousConstructor';
   }
 
-  if (t == 'Function' &&
+  if (t === 'Function' &&
     val.hasOwnProperty &&
     val.hasOwnProperty('prototype') &&
-    (!k ||
-      ['constructor', '__proto__'].includes(k) ||
-      k.toString().match(/^[A-Z]/)
-    )
+    k &&
+    (['constructor', '__proto__'].includes(k) || String(k).match(/^[A-Z]/))
   ) {
     t = (val.name) ?
       val.name :
