@@ -95,15 +95,15 @@ function descStr(val, k) {
 }
 
 function members(val) {
-  let names = Object.getOwnPropertyNames(val).sort();
   let symbols = Object.getOwnPropertySymbols(val).sort((a, b) => {
-    let sa = a.toString();
-    let sb = b.toString();
+    let sa = String(a);
+    let sb = String(b);
 
     return (sa < sb) ? -1 :
       (sa > sb) ? 1 :
         0;
   });
+  let names = Object.getOwnPropertyNames(val).sort();
 
   return symbols.concat(names);
 }
@@ -163,7 +163,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
         break;
       }
 
-      return `${indent.repeat(level)}${k.toString()}{${descStr(val, k)}}: ${typeStr(v, k)}${sv}`;
+      return `${indent.repeat(level)}${String(k)}{${descStr(val, k)}}: ${typeStr(v, k)}${sv}`;
     }).
     join('\n');
 }
