@@ -28,42 +28,47 @@ function typeStr(val, k = undefined) {
     'BasicObject' :
     toString.call(val).match(/^\[object ([^\]]*)\]$/)[1];
 
-  if (t === 'Object' &&
-    val.constructor &&
-    val.constructor.name !== 'Object'
-  ) {
-    t = (val.constructor.name) ?
-      val.constructor.name :
-      'AnonymousConstructor';
-  }
-
-  if (t === 'Function' &&
-    val.hasOwnProperty &&
-    val.hasOwnProperty('prototype') &&
-    k &&
-    (['constructor', '__proto__'].includes(k) || String(k).match(/^[A-Z]/))
-  ) {
-    t = (val.name) ?
-      val.name :
-      'AnonymousConstructor';
+  if (t === 'Object') {
+    if (val.constructor && (
+      (val.constructor.name && val.constructor.name !== t)
+    )) {
+      t = val.constructor.name;
+    }
   }
 
   if (val instanceof Function) {
+    if (val.name && val.name !== t && (
+      val.name.match(/^[A-Z]/) ||
+      (k &&
+        ['__apivis__chain_link',
+          'constructor',
+          'prototype',
+          '__proto__'
+        ].includes(k)
+      )
+    )) {
+      t = val.name;
+    }
+
     t = `${t}(${_argsStr(val.length)})`;
   }
 
-  if (val &&
-    val.hasOwnProperty &&
-    val.hasOwnProperty('constructor') &&
-    !t.endsWith('Prototype')
-  ) {
-    t = `${t}.prototype`;
+  if (val && (
+    (val.hasOwnProperty && val.hasOwnProperty('constructor'))
+  )) {
+    if (!t.endsWith('Prototype')) {
+      if (t === 'Object' && val !== Object.prototype) {
+        t = 'Anonymous.prototype';
+      } else {
+        t = `${t}.prototype`;
+      }
+    }
   }
 
-  if (val instanceof Error &&
-    val.message
-  ) {
-    t = `${t}("${val.message}")`;
+  if (val instanceof Error) {
+    if (val.message) {
+      t = `${t}("${val.message}")`;
+    }
   }
 
   return t;
@@ -169,29 +174,29 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
 }
 
 function chain(val) {
-  let vals = [val];
+  let links = [val];
 
-  for (let proto = Object.getPrototypeOf(val);
-    proto;
-    proto = Object.getPrototypeOf(proto)
+  for (let link = Object.getPrototypeOf(val);
+    link;
+    link = Object.getPrototypeOf(link)
   ) {
-    vals.push(proto);
+    links.push(link);
   }
 
-  return vals;
+  return links;
 }
 
 function chainStr(val, indent = '  ') {
   return chain(val).
     reverse().
-    map((v, i) => `${indent.repeat(i)}[${typeStr(v)}]`).
+    map((v, i) => `${indent.repeat(i)}[${typeStr(v, '__apivis__chain_link')}]`).
     join('\n');
 }
 
 function apiStr(val, indent = '  ') {
   return chain(val).
     reverse().
-    map((v, i) => `${indent.repeat(i)}[${typeStr(v)}]\n${membersStr(v, indent, i + 1, val)}`).
+    map((v, i) => `${indent.repeat(i)}[${typeStr(v, '__apivis__chain_link')}]\n${membersStr(v, indent, i + 1, val)}`).
     join('\n');
 }
 
