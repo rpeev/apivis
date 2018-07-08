@@ -56,12 +56,10 @@ function typeStr(val, k = undefined) {
   if (val && (
     (val.hasOwnProperty && val.hasOwnProperty('constructor'))
   )) {
-    if (!t.endsWith('Prototype')) {
-      if (t === 'Object' && val !== Object.prototype) {
-        t = 'Anonymous.prototype';
-      } else {
-        t = `${t}.prototype`;
-      }
+    if (!t.endsWith('Prototype') && (
+      (t !== 'Object' || val === Object.prototype)
+    )) {
+      t = `${t}.prototype`;
     }
   }
 
