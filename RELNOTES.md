@@ -1,5 +1,11 @@
 # Release Notes
 
+## 6.1.0
+
+- `typeStr` returns `BasicObject` for objects without `__proto__`
+- `descStr` returns `n/a` when key in object is not present or calling it doesn't make sense
+- `peek42` plugin functions pass through options to `apivis` and `peek42` functions
+
 ## 6.0.0
 
 - Rename build entry points, outputs and examples
