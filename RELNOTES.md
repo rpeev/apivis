@@ -1,5 +1,9 @@
 # Release Notes
 
+## 6.1.2
+
+- Fix opts handling bug in `peek42` plugin code
+
 ## 6.1.0
 
 - `typeStr` returns `BasicObject` for objects without `__proto__`
