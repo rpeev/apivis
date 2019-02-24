@@ -36,6 +36,12 @@ function typeStr(val, k = undefined) {
     }
   }
 
+  if (val instanceof Error) {
+    if (val.name && val.name !== t) {
+      t = val.name;
+    }
+  }
+
   if (val instanceof Function) {
     if (val.name && val.name !== t && (
       val.name.match(/^[A-Z]/) ||
@@ -60,12 +66,6 @@ function typeStr(val, k = undefined) {
       (t !== 'Object' || val === Object.prototype)
     )) {
       t = `${t}.prototype`;
-    }
-  }
-
-  if (val instanceof Error) {
-    if (val.message) {
-      t = `${t}:${JSON.stringify(val.message)}`;
     }
   }
 
@@ -162,10 +162,12 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
 
         break;
       case 'object':
-        if (v instanceof Date) {
-          sv = `:${JSON.stringify(v)}`;
-        } else if (Array.isArray(v)) {
+        if (Array.isArray(v)) {
           sv = `:${v.length}`;
+        } else if (v instanceof Date) {
+          sv = `:${JSON.stringify(v)}`;
+        } else if (v instanceof Error) {
+          sv = `:${JSON.stringify(v.message)}`;
         }
 
         break;
