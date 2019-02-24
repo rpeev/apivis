@@ -150,18 +150,18 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
       switch (typeof v) {
       case 'boolean':
       case 'number':
-        sv = `(${v})`;
+        sv = `:${v}`;
 
         break;
       case 'string':
-        sv = `(${JSON.stringify(v)})`;
+        sv = `:${JSON.stringify(v)}`;
 
         break;
       case 'object':
         if (v instanceof Date) {
-          sv = `(${JSON.stringify(v)})`;
+          sv = `:${JSON.stringify(v)}`;
         } else if (Array.isArray(v)) {
-          sv = `(${v.length})`;
+          sv = `:${v.length}`;
         }
 
         break;
