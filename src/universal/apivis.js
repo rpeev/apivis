@@ -140,7 +140,11 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
       // and an exception will be thrown upon trying to access them through val)
       try {
         if ( !(val === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
-          v = val[k];
+          let shv = val[k];
+
+          if (shv !== undefined && shv !== null) {
+            v = shv;
+          }
         }
       } catch (err) {
         // Leave v as set by trying to resolve k in the context of leaf
