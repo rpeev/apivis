@@ -146,7 +146,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
         // Leave v as set by trying to resolve k in the context of leaf
       }
 
-      // Show the values of primitive booleans, numbers and strings
+      // Show select values
       switch (typeof v) {
       case 'boolean':
       case 'number':
@@ -155,6 +155,14 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
         break;
       case 'string':
         sv = `(${JSON.stringify(v)})`;
+
+        break;
+      case 'object':
+        if (v instanceof Date) {
+          sv = `(${JSON.stringify(v)})`;
+        } else if (Array.isArray(v)) {
+          sv = `(${v.length})`;
+        }
 
         break;
       }
