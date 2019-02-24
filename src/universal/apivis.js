@@ -166,7 +166,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
           sv = `:${v.length}`;
         } else if (v instanceof Date) {
           sv = `:${JSON.stringify(v)}`;
-        } else if (v instanceof Error) {
+        } else if (v instanceof Error && v.message) {
           sv = `:${JSON.stringify(v.message)}`;
         }
 
