@@ -123,7 +123,6 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
       ];
       let v;
       let sv = '';
-      let smax = 101;
 
       // First resolve k in the context of leaf (like it would be normally)
       try {
