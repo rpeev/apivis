@@ -65,7 +65,7 @@ function typeStr(val, k = undefined) {
 
   if (val instanceof Error) {
     if (val.message) {
-      t = `${t}("${val.message}")`;
+      t = `${t}:${JSON.stringify(val.message)}`;
     }
   }
 
