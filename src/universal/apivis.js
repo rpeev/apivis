@@ -97,19 +97,16 @@ function descStr(val, k) {
     d1;
 }
 
-function members(val) {
-  let symbols = Object.getOwnPropertySymbols(val).sort((a, b) => {
-    let sa = String(a);
-    let sb = String(b);
+const _compare = (a, b) =>
+  String(a).localeCompare(String(b), undefined, {numeric: true});
+const _keys = (val, kind) =>
+  (val === undefined || val === null) ?
+    [] :
+    Object[`getOwnProperty${kind}`](val).sort(_compare);
+const _symbols = val => _keys(val, 'Symbols');
+const _names = val => _keys(val, 'Names');
 
-    return (sa < sb) ? -1 :
-      (sa > sb) ? 1 :
-        0;
-  });
-  let names = Object.getOwnPropertyNames(val).sort();
-
-  return symbols.concat(names);
-}
+const members = val => _symbols(val).concat(_names(val));
 
 function membersStr(val, indent = '  ', level = 0, leaf = val) {
   return members(val).
