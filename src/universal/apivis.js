@@ -154,11 +154,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
 
         break;
       case 'string':
-        if (v.length > smax) {
-          sv = `("${v.substr(0, smax)}...")`;
-        } else {
-          sv = `("${v}")`;
-        }
+        sv = `(${JSON.stringify(v)})`;
 
         break;
       }
