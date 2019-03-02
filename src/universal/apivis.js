@@ -220,17 +220,19 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
     join('\n');
 }
 
+const x = (val, indent = '  ', level = 1) =>
+  members(val).
+    map(k => `${indent.repeat(level)}${memberStr(val, k)}`).
+    join('\n');
+
 function inspectStr(val, indent = '  ') {
   let st = typeStr(val);
   let sv = valueStr(val);
-  let inspect = [`${st}${(sv) ? `:${sv}` : ''}`];
-  let level = 0;
 
-  members(val).forEach(k => {
-    inspect.push(`${indent.repeat(level + 1)}${memberStr(val, k)}`);
-  });
-
-  return inspect.join('\n');
+  return [
+    `${st}${(sv) ? `:${sv}` : ''}`,
+      x(val, indent)
+  ].join('\n');
 }
 
 function chain(val) {
