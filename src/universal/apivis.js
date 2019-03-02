@@ -159,9 +159,16 @@ const _swallowPromiseRejection = v => (
   v
 );
 
+const _getterTagDummy = {
+  __proto__: {
+    get [Symbol.toStringTag]() { return 'Getter'; }
+  }
+};
+
 function memberStr(val, k, leaf = val) {
   let sk = String(k);
   let sd = descStr(val, k);
+  let isGetter = sd.includes('g');
   // Do not attempt to resolve these
   let skip = [
     'arguments',
@@ -182,7 +189,7 @@ function memberStr(val, k, leaf = val) {
       v = _swallowPromiseRejection(leaf[k]);
     }
   } catch (err) {
-    v = err; // Make the error visible in the dump
+    v = (isGetter) ? _getterTagDummy : err;
   }
 
   // Then try resolving k in the context of val (reached through
