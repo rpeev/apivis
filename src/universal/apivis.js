@@ -160,6 +160,8 @@ const _swallowPromiseRejection = v => (
 );
 
 function memberStr(val, k, leaf = val) {
+  let sk = String(k);
+  let sd = descStr(val, k);
   // Do not attempt to resolve these
   let skip = [
     'arguments',
@@ -170,6 +172,7 @@ function memberStr(val, k, leaf = val) {
   let leafOnly = [
     '__proto__'
   ];
+  let st;
   let v;
   let sv = '';
 
@@ -198,9 +201,10 @@ function memberStr(val, k, leaf = val) {
     // Leave v as set by trying to resolve k in the context of leaf
   }
 
+  st = typeStr(v, k);
   sv = valueStr(v);
 
-  return `${String(k)}{${descStr(val, k)}}: ${typeStr(v, k)}${(sv) ? `:${sv}` : ''}`;
+  return `${sk}{${sd}}: ${st}${(sv) ? `:${sv}` : ''}`;
 }
 
 function membersStr(val, indent = '  ', level = 0, leaf = val) {
