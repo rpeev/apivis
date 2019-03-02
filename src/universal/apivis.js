@@ -135,10 +135,11 @@ const _getterTagDummy = {
   }
 };
 
+const _noop = () => {};
 const _swallowPromiseRejection = v => (
   (typeof v === 'object' && v !== null &&
-    typeof v.catch === 'function' &&
-      v.catch(err => {})),
+    v !== Promise.prototype && typeof v.catch === 'function' &&
+      v.catch(_noop)),
   v
 );
 
