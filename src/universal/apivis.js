@@ -129,6 +129,19 @@ function descStr(val, k) {
   return (d2) ? `${d1} ${d2}` : d1;
 }
 
+const _getterTagDummy = {
+  __proto__: {
+    get [Symbol.toStringTag]() { return 'Getter'; }
+  }
+};
+
+const _swallowPromiseRejection = v => (
+  (typeof v === 'object' && v !== null &&
+    typeof v.catch === 'function' &&
+      v.catch(err => {})),
+  v
+);
+
 function memberStr(val, k, leaf = val) {
   let sk = String(k);
   let sd = descStr(val, k);
@@ -200,19 +213,6 @@ const _symbols = val => _keys(val, 'Symbols');
 const _names = val => _keys(val, 'Names');
 
 const members = val => _symbols(val).concat(_names(val));
-
-const _swallowPromiseRejection = v => (
-  (typeof v === 'object' && v !== null &&
-    typeof v.catch === 'function' &&
-      v.catch(err => {})),
-  v
-);
-
-const _getterTagDummy = {
-  __proto__: {
-    get [Symbol.toStringTag]() { return 'Getter'; }
-  }
-};
 
 function membersStr(val, indent = '  ', level = 0, leaf = val) {
   return members(val).
