@@ -77,6 +77,35 @@ function typeStr(val, k = undefined) {
   return t;
 }
 
+function valueStr(val) {
+  switch (typeof val) {
+  case 'boolean':
+  case 'number':
+    return `${val}`;
+  case 'string':
+    return JSON.stringify(val);
+  case 'object':
+    if (Array.isArray(val) && val !== Array.prototype) {
+      return `${val.length}`;
+    } else if (val instanceof Date) {
+      return JSON.stringify(val);
+    } else if (val instanceof Error) {
+      // message might be a getter that throws
+      try {
+        let msg = val.message;
+
+        if (msg) {
+          return JSON.stringify(msg);
+        }
+      } catch (err) {
+        return '';
+      }
+    }
+  default:
+    return '';
+  }
+}
+
 function descStr(val, k) {
   if (val === undefined || val === null) {
     return 'n/a';
@@ -171,37 +200,9 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
         // Leave v as set by trying to resolve k in the context of leaf
       }
 
-      // Show select values
-      switch (typeof v) {
-      case 'boolean':
-      case 'number':
-        sv = `:${v}`;
+      sv = valueStr(v);
 
-        break;
-      case 'string':
-        sv = `:${JSON.stringify(v)}`;
-
-        break;
-      case 'object':
-        if (Array.isArray(v) && v !== Array.prototype) {
-          sv = `:${v.length}`;
-        } else if (v instanceof Date) {
-          sv = `:${JSON.stringify(v)}`;
-        } else if (v instanceof Error) {
-          // message might be a getter that throws
-          try {
-            let msg = v.message;
-
-            if (msg) {
-              sv = `:${JSON.stringify(msg)}`;
-            }
-          } catch (err) {}
-        }
-
-        break;
-      }
-
-      return `${indent.repeat(level)}${String(k)}{${descStr(val, k)}}: ${typeStr(v, k)}${sv}`;
+      return `${indent.repeat(level)}${String(k)}{${descStr(val, k)}}: ${typeStr(v, k)}${(sv) ? `:${sv}` : ''}`;
     }).
     join('\n');
 }
