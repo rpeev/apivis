@@ -129,42 +129,6 @@ function descStr(val, k) {
   return (d2) ? `${d1} ${d2}` : d1;
 }
 
-const _compare = (a, b) => {
-  let sa = String(a);
-  let sb = String(b);
-  let na;
-  let nb;
-
-  if (Number.isNaN(na = Number(sa)) || Number.isNaN(nb = Number(sb))) {
-    return (sa < sb) ? -1 : (sa > sb) ? 1 : 0;
-  }
-
-  return na - nb;
-};
-
-const _keys = (val, kind) =>
-  (val === undefined || val === null) ?
-    [] :
-    Object[`getOwnProperty${kind}`](val).sort(_compare);
-
-const _symbols = val => _keys(val, 'Symbols');
-const _names = val => _keys(val, 'Names');
-
-const members = val => _symbols(val).concat(_names(val));
-
-const _swallowPromiseRejection = v => (
-  (typeof v === 'object' && v !== null &&
-    typeof v.catch === 'function' &&
-      v.catch(err => {})),
-  v
-);
-
-const _getterTagDummy = {
-  __proto__: {
-    get [Symbol.toStringTag]() { return 'Getter'; }
-  }
-};
-
 function memberStr(val, k, leaf = val) {
   let sk = String(k);
   let sd = descStr(val, k);
@@ -213,6 +177,42 @@ function memberStr(val, k, leaf = val) {
 
   return `${sk}{${sd}}: ${st}${(sv) ? `:${sv}` : ''}`;
 }
+
+const _compare = (a, b) => {
+  let sa = String(a);
+  let sb = String(b);
+  let na;
+  let nb;
+
+  if (Number.isNaN(na = Number(sa)) || Number.isNaN(nb = Number(sb))) {
+    return (sa < sb) ? -1 : (sa > sb) ? 1 : 0;
+  }
+
+  return na - nb;
+};
+
+const _keys = (val, kind) =>
+  (val === undefined || val === null) ?
+    [] :
+    Object[`getOwnProperty${kind}`](val).sort(_compare);
+
+const _symbols = val => _keys(val, 'Symbols');
+const _names = val => _keys(val, 'Names');
+
+const members = val => _symbols(val).concat(_names(val));
+
+const _swallowPromiseRejection = v => (
+  (typeof v === 'object' && v !== null &&
+    typeof v.catch === 'function' &&
+      v.catch(err => {})),
+  v
+);
+
+const _getterTagDummy = {
+  __proto__: {
+    get [Symbol.toStringTag]() { return 'Getter'; }
+  }
+};
 
 function membersStr(val, indent = '  ', level = 0, leaf = val) {
   return members(val).
@@ -328,6 +328,7 @@ const apivis = {
   version: LIB_VERSION,
   typeStr,
   descStr,
+  memberStr,
   members,
   membersStr,
   inspectStr,
@@ -340,6 +341,7 @@ const apivis = {
 export {
   typeStr,
   descStr,
+  memberStr,
   members,
   membersStr,
   inspectStr,
