@@ -92,9 +92,7 @@ function descStr(val, k) {
   if (desc.enumerable) { d2 += 'e'; }
   if (desc.configurable) { d2 += 'c'; }
 
-  return (d2) ?
-    `${d1} ${d2}` :
-    d1;
+  return (d2) ? `${d1} ${d2}` : d1;
 }
 
 const _compare = (a, b) =>
