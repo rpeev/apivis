@@ -180,8 +180,15 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
           sv = `:${v.length}`;
         } else if (v instanceof Date) {
           sv = `:${JSON.stringify(v)}`;
-        } else if (v instanceof Error && v.message) {
-          sv = `:${JSON.stringify(v.message)}`;
+        } else if (v instanceof Error) {
+          // message might be a getter that throws
+          try {
+            let msg = v.message;
+
+            if (msg) {
+              sv = `:${JSON.stringify(msg)}`;
+            }
+          } catch (err) {}
         }
 
         break;
