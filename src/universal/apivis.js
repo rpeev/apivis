@@ -161,10 +161,10 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
       // and an exception will be thrown upon trying to access them through val)
       try {
         if ( !(val === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
-          let shv = _swallowPromiseRejection(val[k]);
+          let shadowed = _swallowPromiseRejection(val[k]);
 
-          if (shv !== undefined && shv !== null) {
-            v = shv;
+          if (shadowed !== undefined && shadowed !== null) {
+            v = shadowed;
           }
         }
       } catch (err) {
