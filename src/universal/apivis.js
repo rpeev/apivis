@@ -271,6 +271,13 @@ function peek42(fnOutput, fnComment) {
         opts
       );
     },
+    member(val, k, comment = undefined, opts = undefined) {
+      fnOutput(
+        memberStr(val, k),
+        fnComment(comment, `${String(k)} in ${typeStr(val)}`, 'member'),
+        opts
+      );
+    },
     members(val, comment = undefined, opts = undefined) {
       fnOutput(
         membersStr(val,
