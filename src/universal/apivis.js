@@ -37,9 +37,14 @@ function typeStr(val, k = undefined) {
   }
 
   if (val instanceof Error) {
-    if (val.name && val.name !== t) {
-      t = val.name;
-    }
+    // name might be a getter that throws
+    try {
+      let name = val.name;
+
+      if (name && name !== t) {
+        t = name;
+      }
+    } catch (err) {}
   }
 
   if (val instanceof Function) {
