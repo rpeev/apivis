@@ -220,6 +220,13 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
     join('\n');
 }
 
+function inspectStr(val, indent = '  ') {
+  let st = typeStr(val);
+  let sv = valueStr(val);
+
+  return `${st}${(sv) ? `:${sv}` : ''}`;
+}
+
 function chain(val) {
   let links = [val];
 
@@ -278,6 +285,17 @@ function peek42(fnOutput, fnComment) {
         opts
       );
     },
+    inspect(val, comment = undefined, opts = undefined) {
+      fnOutput(
+        inspectStr(val,
+          (opts && typeof opts.indent === 'string') ?
+            opts.indent :
+            undefined
+        ),
+        fnComment(comment, typeStr(val), 'inspect'),
+        opts
+      );
+    },
     chain(val, comment = undefined, opts = undefined) {
       fnOutput(
         chainStr(val,
@@ -312,11 +330,21 @@ const apivis = {
   descStr,
   members,
   membersStr,
+  inspectStr,
   chain,
   chainStr,
   apiStr,
   peek42
 };
 
-export {typeStr, descStr, members, membersStr, chain, chainStr, apiStr};
+export {
+  typeStr,
+  descStr,
+  members,
+  membersStr,
+  inspectStr,
+  chain,
+  chainStr,
+  apiStr
+};
 export default apivis;
