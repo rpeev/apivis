@@ -100,12 +100,24 @@ function descStr(val, k) {
   return (d2) ? `${d1} ${d2}` : d1;
 }
 
-const _compare = (a, b) =>
-  String(a).localeCompare(String(b), undefined, {numeric: true});
+const _compare = (a, b) => {
+  let sa = String(a);
+  let sb = String(b);
+  let na;
+  let nb;
+
+  if (Number.isNaN(na = Number(sa)) || Number.isNaN(nb = Number(sb))) {
+    return (sa < sb) ? -1 : (sa > sb) ? 1 : 0;
+  }
+
+  return na - nb;
+};
+
 const _keys = (val, kind) =>
   (val === undefined || val === null) ?
     [] :
     Object[`getOwnProperty${kind}`](val).sort(_compare);
+
 const _symbols = val => _keys(val, 'Symbols');
 const _names = val => _keys(val, 'Names');
 
