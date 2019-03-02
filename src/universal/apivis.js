@@ -176,7 +176,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
 
         break;
       case 'object':
-        if (Array.isArray(v)) {
+        if (Array.isArray(v) && v !== Array.prototype) {
           sv = `:${v.length}`;
         } else if (v instanceof Date) {
           sv = `:${JSON.stringify(v)}`;
