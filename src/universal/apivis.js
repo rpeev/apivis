@@ -220,19 +220,32 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
     join('\n');
 }
 
-const x = (val, indent = '  ', level = 1) =>
-  members(val).
-    map(k => `${indent.repeat(level)}${memberStr(val, k)}`).
-    join('\n');
+const _inspectStrShouldDescend = (k, v, level) =>
+  typeof v === 'object' && v !== null && level < 2;
+
+function _inspectStr(val, k, indent = '  ', level = 1) {
+  let result = [`${indent.repeat(level)}${memberStr(val, k)}`];
+  let _val = _swallowPromiseRejection(val[k]);
+
+  if (_inspectStrShouldDescend(k, _val, level)) {
+    members(_val).forEach(_k => result.push(
+      _inspectStr(_val, _k, indent, level + 1)
+    ));
+  }
+
+  return result.join('\n');
+}
 
 function inspectStr(val, indent = '  ') {
   let st = typeStr(val);
   let sv = valueStr(val);
+  let result = [`${st}${(sv) ? `:${sv}` : ''}`];
 
-  return [
-    `${st}${(sv) ? `:${sv}` : ''}`,
-      x(val, indent)
-  ].join('\n');
+  members(val).forEach(k => result.push(
+    _inspectStr(val, k, indent)
+  ));
+
+  return result.join('\n');
 }
 
 function chain(val) {
