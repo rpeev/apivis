@@ -123,6 +123,13 @@ const _names = val => _keys(val, 'Names');
 
 const members = val => _symbols(val).concat(_names(val));
 
+const _swallowPromiseRejection = v => (
+  (typeof v === 'object' && v !== null &&
+    typeof v.catch === 'function' &&
+      v.catch(err => {})),
+  v
+);
+
 function membersStr(val, indent = '  ', level = 0, leaf = val) {
   return members(val).
     map(k => {
@@ -142,7 +149,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
       // First resolve k in the context of leaf (like it would be normally)
       try {
         if (!skip.includes(k)) {
-          v = leaf[k];
+          v = _swallowPromiseRejection(leaf[k]);
         }
       } catch (err) {
         v = err; // Make the error visible in the dump
@@ -154,7 +161,7 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
       // and an exception will be thrown upon trying to access them through val)
       try {
         if ( !(val === leaf || leafOnly.includes(k) || skip.includes(k)) ) {
-          let shv = val[k];
+          let shv = _swallowPromiseRejection(val[k]);
 
           if (shv !== undefined && shv !== null) {
             v = shv;
