@@ -204,7 +204,7 @@ function memberInfo(val, k, seen) {
     'caller'
   ];
   let iSeen = -1;
-  let sCircular;
+  let sSeen;
   let st;
   let v;
   let sv = '';
@@ -218,14 +218,14 @@ function memberInfo(val, k, seen) {
   }
 
   iSeen = seen.findIndex(kv => v === kv[1]);
-  sCircular = (iSeen >= 0) ? `->${seen[iSeen][0]}` : '';
+  sSeen = (iSeen >= 0) ? `->${seen[iSeen][0]}` : '';
   st = typeStr(v, k);
   sv = valueStr(v);
 
   return {
     v,
-    s: `${sk}{${sd}}${sCircular}: ${st}${(sv) ? `:${sv}` : ''}`,
-    circular: iSeen >= 0
+    s: `${sk}{${sd}}${sSeen}: ${st}${(sv) ? `:${sv}` : ''}`,
+    seen: iSeen >= 0
   };
 }
 
@@ -285,7 +285,7 @@ function _inspectStr(val, k,
   let v = mi.v;
   let result = [`${indent.repeat(level)}${mi.s}`];
 
-  if (!mi.circular && _shouldDescend(k, v, level)) {
+  if (!mi.seen && _shouldDescend(k, v, level)) {
     path.push(String(k));
     seen.push([path.join('.'), v]);
 
