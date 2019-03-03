@@ -193,6 +193,42 @@ function memberStr(val, k, leaf = val) {
   return `${sk}{${sd}}: ${st}${(sv) ? `:${sv}` : ''}`;
 }
 
+function memberInfo(val, k, seen) {
+  let sk = String(k);
+  let sd = descStr(val, k);
+  let isGetter = sd.includes('g');
+  // Do not attempt to resolve these
+  let skip = [
+    'arguments',
+    'callee',
+    'caller'
+  ];
+  let iSeen = -1;
+  let sCircular;
+  let st;
+  let v;
+  let sv = '';
+
+  try {
+    if (!skip.includes(k)) {
+      v = _swallowPromiseRejection(val[k]);
+    }
+  } catch (err) {
+    v = (isGetter) ? _getterTagDummy : err;
+  }
+
+  iSeen = seen.findIndex(kv => v === kv[1]);
+  sCircular = (iSeen >= 0) ? `->${String(seen[iSeen][0])}` : '';
+  st = typeStr(v, k);
+  sv = valueStr(v);
+
+  return {
+    v,
+    s: `${sk}{${sd}}${sCircular}: ${st}${(sv) ? `:${sv}` : ''}`,
+    circular: iSeen >= 0
+  };
+}
+
 const _compare = (a, b) => {
   let sa = String(a);
   let sb = String(b);
@@ -223,22 +259,26 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
 }
 
 const _descendableObject = v =>
-  typeof v === 'object' && v !== null;
+  typeof v === 'object' && v !== null &&
+    v !== _getterTagDummy;
 const _descendableFunction = v =>
   typeof v === 'function' &&
-  hasOwnProperty.call(v, 'prototype') &&
-  v.name && v.name.match(/^[A-Z]/);
+    hasOwnProperty.call(v, 'prototype') &&
+      v.name && v.name.match(/^[A-Z]/);
 
 const _shouldDescend = (k, v, level) =>
-  (_descendableObject(v) || _descendableFunction(v)) && level < 2;
+  (_descendableObject(v) || _descendableFunction(v));
 
-function _inspectStr(val, k, indent = '  ', level = 1) {
-  let result = [`${indent.repeat(level)}${memberStr(val, k)}`];
-  let _val = _swallowPromiseRejection(val[k]);
+function _inspectStr(val, k, indent = '  ', level = 1, seen = [['ROOT', val]]) {
+  let mi = memberInfo(val, k, seen);
+  let v = mi.v;
+  let result = [`${indent.repeat(level)}${mi.s}`];
 
-  if (_shouldDescend(k, _val, level)) {
-    members(_val).forEach(_k => result.push(
-      _inspectStr(_val, _k, indent, level + 1)
+  if (!mi.circular && _shouldDescend(k, v, level)) {
+    seen.push([k, v]);
+
+    members(v).forEach(_k => result.push(
+      _inspectStr(v, _k, indent, level + 1, seen)
     ));
   }
 
