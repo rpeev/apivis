@@ -218,7 +218,7 @@ function memberInfo(val, k, seen) {
   }
 
   iSeen = seen.findIndex(kv => v === kv[1]);
-  sCircular = (iSeen >= 0) ? `->${String(seen[iSeen][0])}` : '';
+  sCircular = (iSeen >= 0) ? `->${seen[iSeen][0]}` : '';
   st = typeStr(v, k);
   sv = valueStr(v);
 
@@ -277,17 +277,23 @@ const _descendableFunction = v =>
 const _shouldDescend = (k, v, level) =>
   (_descendableObject(v) || _descendableFunction(v));
 
-function _inspectStr(val, k, indent = '  ', level = 1, seen = [['ROOT', val]]) {
+function _inspectStr(val, k,
+  indent = '  ', level = 1,
+  seen = [['ROOT', val]], path = []
+) {
   let mi = memberInfo(val, k, seen);
   let v = mi.v;
   let result = [`${indent.repeat(level)}${mi.s}`];
 
   if (!mi.circular && _shouldDescend(k, v, level)) {
-    seen.push([k, v]);
+    path.push(String(k));
+    seen.push([path.join('.'), v]);
 
     members(v).forEach(_k => result.push(
-      _inspectStr(v, _k, indent, level + 1, seen)
+      _inspectStr(v, _k, indent, level + 1, seen, path)
     ));
+
+    path.pop();
   }
 
   return result.join('\n');
