@@ -4,6 +4,7 @@ import {
 } from '../../package.json';
 
 const {
+  hasOwnProperty,
   toString
 } = Object.prototype;
 
@@ -221,14 +222,21 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
     join('\n');
 }
 
-const _inspectStrShouldDescend = (k, v, level) =>
-  typeof v === 'object' && v !== null && level < 2;
+const _descendableObject = v =>
+  typeof v === 'object' && v !== null;
+const _descendableFunction = v =>
+  typeof v === 'function' &&
+  hasOwnProperty.call(v, 'prototype') &&
+  v.name && v.name.match(/^[A-Z]/);
+
+const _shouldDescend = (k, v, level) =>
+  (_descendableObject(v) || _descendableFunction(v)) && level < 2;
 
 function _inspectStr(val, k, indent = '  ', level = 1) {
   let result = [`${indent.repeat(level)}${memberStr(val, k)}`];
   let _val = _swallowPromiseRejection(val[k]);
 
-  if (_inspectStrShouldDescend(k, _val, level)) {
+  if (_shouldDescend(k, _val, level)) {
     members(_val).forEach(_k => result.push(
       _inspectStr(_val, _k, indent, level + 1)
     ));
