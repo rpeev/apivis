@@ -67,8 +67,10 @@ The following properties/functions are available through the **apivis** namespac
 - `version` - library version
 - `typeStr(val)` - returns type string for `val` (based on `Object.prototype.toString.call(val)` with a few twists)
 - `descStr(val, k)` - returns own property descriptor string for `k` in `val` in the form `vw ec` or `g c` for example, where each letter shows if the prop is value and writable or getter and setter and if it is enumerable and configurable
+- `memberStr(val, k)` - returns string representation for `k` in `val` like the one used by `membersStr` but for a single member
 - `members(val)` - returns (sorted) array of all *own* `val` property names (including symbols)
 - `membersStr(val, indent = '  ', level = 0)` - returns string representation of all *own* `val` property names (including symbols) with type and own property descriptor information and the values of the primitive booleans, numbers and strings, separated by a newline and indented accordingly
+- `inspectStr(val, indent = '  ')` - returns string representation of `val` property tree similar to `JSON.stringify` but much more thorough (includes symbol and string keys and *all* values, handles circular refs, displays the path of keys to reach to already encountered ref)
 - `chain(val)` - returns the prototype chain of `val` (an array, `val` is first, the root is last)
 - `chainStr(val, indent = '  ')` - returns string representation of `val` prototype chain
 - `apiStr(val, indent = '  ')` - returns string representation of `val` API tree

@@ -1,5 +1,13 @@
 # Release Notes
 
+## 6.2.0
+
+- add `inspectStr` method (similar to but much more informative than `JSON.stringify`)
+- tweak property keys sort comparison (preserve the usual string sorting behaviour and use numeric ordering for number keys)
+- tweak the display and the format for displaying values (use type:value without parentheses, `JSON.stringify` strings and dates, show array lengths)
+- display `Getter` for getters that cannot be resolved instead of showing the error caused by the access
+- add guards for some problematic property access cases
+
 ## 6.1.2
 
 - Fix opts handling bug in `peek42` plugin code
