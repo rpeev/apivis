@@ -297,9 +297,10 @@ function inspectStr(val, indent = '  ') {
   let st = typeStr(val);
   let sv = valueStr(val);
   let result = [`${st}${(sv) ? `:${sv}` : ''}`];
+  let seen = [['ROOT', val]];
 
   members(val).forEach(k => result.push(
-    _inspectStr(val, k, indent)
+    _inspectStr(val, k, indent, 1, seen)
   ));
 
   return result.join('\n');
