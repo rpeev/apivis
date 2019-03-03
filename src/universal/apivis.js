@@ -258,6 +258,10 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
     join('\n');
 }
 
+const _trackedReference = v =>
+  (typeof v === 'object' && v !== null &&
+    v !== _getterTagDummy) ||
+  typeof v === 'function';
 const _descendableObject = v =>
   typeof v === 'object' && v !== null &&
     v !== _getterTagDummy;
@@ -285,13 +289,15 @@ function _inspectStr(val, k,
   let v = mi.v;
   let result = [`${indent.repeat(level)}${mi.s}`];
 
-  if (!mi.seen && _shouldDescend(k, v, level)) {
+  if (!mi.seen && _trackedReference(v)) {
     path.push(String(k));
     seen.push([path.join('.'), v]);
 
-    members(v).forEach(_k => result.push(
-      _inspectStr(v, _k, indent, level + 1, seen, path)
-    ));
+    if (_shouldDescend(k, v, level)) {
+      members(v).forEach(_k => result.push(
+        _inspectStr(v, _k, indent, level + 1, seen, path)
+      ));
+    }
 
     path.pop();
   }
