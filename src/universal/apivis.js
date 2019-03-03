@@ -261,10 +261,18 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
 const _descendableObject = v =>
   typeof v === 'object' && v !== null &&
     v !== _getterTagDummy;
+const _maybeConstructor = v =>
+  // Assumes typeof v === 'function'
+  hasOwnProperty.call(v, 'prototype') &&
+    v.name && v.name.match(/^[A-Z]/);
+const _descendableFunctionWhitelist = v =>
+  // Assumes typeof v === 'function'
+  v === Proxy ||
+  (typeof _ === 'function' && v === _) ||
+  (typeof $ === 'function' && v === $);
 const _descendableFunction = v =>
   typeof v === 'function' &&
-    hasOwnProperty.call(v, 'prototype') &&
-      v.name && v.name.match(/^[A-Z]/);
+    (_maybeConstructor(v) || _descendableFunctionWhitelist(v));
 
 const _shouldDescend = (k, v, level) =>
   (_descendableObject(v) || _descendableFunction(v));
