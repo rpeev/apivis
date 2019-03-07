@@ -29,11 +29,31 @@ function typeStr(val, k = undefined) {
     'BasicObject' :
     toString.call(val).match(/^\[object ([^\]]*)\]$/)[1];
 
-  if (t === 'Object') {
-    if (val.constructor && (
-      (val.constructor.name && val.constructor.name !== t)
-    )) {
-      t = val.constructor.name;
+  if (val instanceof Object) {
+    if (val.constructor) {
+      if (val.constructor.name) {
+        if (val.constructor.name !== t) {
+          let name = val.constructor.name;
+
+          if (t === 'Object') {
+            t = name;
+          } else if (name !== 'Object') {
+            if (t.indexOf(name) >= 0) {
+              //t = t;
+            } else if (name.indexOf(t) >= 0) {
+              t = name;
+            } else {
+              if (!t.endsWith('Prototype')) {
+                t = `${t}(ctor:${name})`;
+              }
+            }
+          }
+        }
+      } else {
+        if (!t.endsWith('Prototype')) {
+          t = `${t}(ctor:Anonymous)`;
+        }
+      }
     }
   }
 
