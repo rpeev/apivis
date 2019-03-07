@@ -8,7 +8,7 @@ const {
   toString
 } = Object.prototype;
 
-function _isBasicObject(val) {
+function _isNullProtoObject(val) {
   return typeof val === 'object' &&
     val !== null &&
     val.__proto__ === undefined;
@@ -25,8 +25,8 @@ function _argsStr(count, name = 'arg') {
 }
 
 function typeStr(val, k = undefined) {
-  let t = (_isBasicObject(val)) ?
-    'BasicObject' :
+  let t = (_isNullProtoObject(val)) ?
+    'Object(proto:Null)' :
     toString.call(val).match(/^\[object ([^\]]*)\]$/)[1];
 
   if (val instanceof Object) {
