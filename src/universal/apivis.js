@@ -185,7 +185,11 @@ function memberStr(val, k, leaf = val) {
   // First resolve k in the context of leaf (like it would be normally)
   try {
     if (!skip.includes(k)) {
-      v = _swallowPromiseRejection(leaf[k]);
+      if (k === SymbolVpropEntries) {
+        v = _vpropEntries(leaf);
+      } else {
+        v = _swallowPromiseRejection(leaf[k]);
+      }
     }
   } catch (err) {
     v = (isGetter) ? _getterTagDummy : err;
@@ -231,7 +235,11 @@ function memberInfo(val, k, seen) {
 
   try {
     if (!skip.includes(k)) {
-      v = _swallowPromiseRejection(val[k]);
+      if (k === SymbolVpropEntries) {
+        v = _vpropEntries(val);
+      } else {
+        v = _swallowPromiseRejection(val[k]);
+      }
     }
   } catch (err) {
     v = (isGetter) ? _getterTagDummy : err;
@@ -270,7 +278,49 @@ const _keys = (val, kind) =>
 const _symbols = val => _keys(val, 'Symbols');
 const _names = val => _keys(val, 'Names');
 
-const members = val => _symbols(val).concat(_names(val));
+const MaxVpropEntries = 200;
+const DescVpropEntries = `vprop_entries(max:${MaxVpropEntries})`;
+const SymbolVpropEntries = Symbol(DescVpropEntries);
+
+const _isVpropEntriesType = val => val[Symbol.iterator] && (
+  !(typeof val === 'string' ||
+    Array.isArray(val) ||
+    (typeof NodeList !== 'undefined' && val instanceof NodeList) ||
+    (typeof HTMLCollection !== 'undefined' && val instanceof HTMLCollection) ||
+    (typeof NamedNodeMap !== 'undefined' && val instanceof NamedNodeMap)
+  ) && !hasOwnProperty.call(val, 'constructor')
+);
+
+const _take = (iterator, max = Infinity) => {
+  let result = [];
+
+  for (let iter = iterator.next(), i = 0;
+    !iter.done && i < max;
+    iter = iterator.next(), i++
+  ) {
+    let entry = iter.value;
+
+    result.push(
+      (Array.isArray(entry) && entry.length === 2) ?
+        {key: entry[0], value: entry[1]} :
+        entry
+    );
+  }
+
+  return result;
+};
+
+const _vpropEntries = val => _take(
+  val[Symbol.iterator](),
+  MaxVpropEntries
+);
+
+const members = val => (
+  ( !(val === undefined || val === null) && _isVpropEntriesType(val) ) ?
+    [SymbolVpropEntries] :
+    []
+).
+  concat(_symbols(val), _names(val));
 
 function membersStr(val, indent = '  ', level = 0, leaf = val) {
   return members(val).
