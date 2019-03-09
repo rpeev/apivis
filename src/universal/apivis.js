@@ -347,7 +347,8 @@ const _descendableFunctionWhitelist = v =>
   // Assumes typeof v === 'function'
   v === Proxy ||
   (typeof _ === 'function' && v === _) ||
-  (typeof $ === 'function' && v === $);
+  (typeof $ === 'function' && v === $) ||
+  (typeof p === 'function' && v === p);
 const _descendableFunction = v =>
   typeof v === 'function' &&
     (_maybeConstructor(v) || _descendableFunctionWhitelist(v));
