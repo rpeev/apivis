@@ -278,18 +278,22 @@ const _keys = (val, kind) =>
 const _symbols = val => _keys(val, 'Symbols');
 const _names = val => _keys(val, 'Names');
 
-const MaxVpropEntries = 200;
-const DescVpropEntries = `vprop_entries(max:${MaxVpropEntries})`;
+//const MaxVpropEntries = 200;
+const MaxVpropEntries = Infinity;
+//const DescVpropEntries = `vprop_entries(max:${MaxVpropEntries})`;
+const DescVpropEntries = `vprop_entries`;
 const SymbolVpropEntries = Symbol(DescVpropEntries);
 
-const _isVpropEntriesType = val => val[Symbol.iterator] && (
-  !(typeof val === 'string' ||
-    Array.isArray(val) ||
-    (typeof NodeList !== 'undefined' && val instanceof NodeList) ||
-    (typeof HTMLCollection !== 'undefined' && val instanceof HTMLCollection) ||
-    (typeof NamedNodeMap !== 'undefined' && val instanceof NamedNodeMap)
-  ) && !hasOwnProperty.call(val, 'constructor')
-);
+//const _isVpropEntriesType = val => val[Symbol.iterator] && (
+//  !(typeof val === 'string' ||
+//    Array.isArray(val) ||
+//    (typeof NodeList !== 'undefined' && val instanceof NodeList) ||
+//    (typeof HTMLCollection !== 'undefined' && val instanceof HTMLCollection) ||
+//    (typeof NamedNodeMap !== 'undefined' && val instanceof NamedNodeMap)
+//  ) && !hasOwnProperty.call(val, 'constructor')
+//);
+const _isVpropEntriesType = val =>
+  val instanceof Set || val instanceof Map;
 
 const _take = (iterator, max = Infinity) => {
   let result = [];
