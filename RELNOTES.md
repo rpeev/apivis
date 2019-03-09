@@ -1,12 +1,18 @@
 # Release Notes
 
+## 6.3.0
+
+- Display constructor name when different from string tag
+- Tweak the display of null proto objects
+- Show the entries of Set and Map instances
+
 ## 6.2.0
 
-- add `inspectStr` method (similar to but much more informative than `JSON.stringify`)
-- tweak property keys sort comparison (preserve the usual string sorting behaviour and use numeric ordering for number keys)
-- tweak the display and the format for displaying values (use type:value without parentheses, `JSON.stringify` strings and dates, show array lengths)
-- display `Getter` for getters that cannot be resolved instead of showing the error caused by the access
-- add guards for some problematic property access cases
+- Add `inspectStr` method (similar to but much more informative than `JSON.stringify`)
+- Tweak property keys sort comparison (preserve the usual string sorting behaviour and use numeric ordering for number keys)
+- Tweak the display and the format for displaying values (use type:value without parentheses, `JSON.stringify` strings and dates, show array lengths)
+- Display `Getter` for getters that cannot be resolved instead of showing the error caused by the access
+- Add guards for some problematic property access cases
 
 ## 6.1.2
 
