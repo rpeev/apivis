@@ -393,6 +393,47 @@ function inspectStr(val, indent = '  ') {
   return result.join('\n');
 }
 
+function _inspectHtml(val, k,
+  indent = '  ', level = 1,
+  seen = [['ROOT', val]], path = []
+) {
+  let mi = memberInfo(val, k, seen);
+  let v = mi.v;
+  let result = [`${indent.repeat(level)}(html) ${mi.s}`];
+
+  if (!mi.seen && _trackedReference(v)) {
+    path.push(String(k));
+    seen.push([path.join('.'), v]);
+
+    if (_shouldDescend(k, v, level)) {
+      members(v).forEach(_k => result.push(
+        _inspectHtml(v, _k, indent, level + 1, seen, path)
+      ));
+    }
+
+    path.pop();
+  }
+
+  return result.join('\n');
+}
+
+function inspectHtml(val, indent = '  ') {
+  let st = typeStr(val);
+  let sv = valueStr(val);
+  let result = [`(html) ${st}${(sv) ? `:${sv}` : ''}`];
+  let el = document.createElement('div');
+  let seen = [['ROOT', val]];
+
+  members(val).forEach(k => result.push(
+    _inspectHtml(val, k, indent, 1, seen)
+  ));
+
+  el.dataset.peek42HtmlEntry = true;
+  el.textContent = result.join('\n');
+
+  return el;
+}
+
 function chain(val) {
   let links = [val];
 
@@ -469,6 +510,17 @@ function peek42(fnOutput, fnComment) {
         opts
       );
     },
+    inspect1(val, comment = undefined, opts = undefined) {
+      fnOutput(
+        inspectHtml(val,
+          (opts && typeof opts.indent === 'string') ?
+            opts.indent :
+            undefined
+        ),
+        fnComment(comment, typeStr(val), 'inspect (html)'),
+        opts
+      );
+    },
     chain(val, comment = undefined, opts = undefined) {
       fnOutput(
         chainStr(val,
@@ -505,6 +557,7 @@ const apivis = {
   members,
   membersStr,
   inspectStr,
+  inspectHtml,
   chain,
   chainStr,
   apiStr,
@@ -518,6 +571,7 @@ export {
   members,
   membersStr,
   inspectStr,
+  inspectHtml,
   chain,
   chainStr,
   apiStr
