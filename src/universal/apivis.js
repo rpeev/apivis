@@ -421,13 +421,17 @@ function inspectHtml(val, indent = '  ') {
   let st = typeStr(val);
   let sv = valueStr(val);
   let result = [`(html) ${st}${(sv) ? `:${sv}` : ''}`];
+  let el = document.createElement('div');
   let seen = [['ROOT', val]];
 
   members(val).forEach(k => result.push(
     _inspectHtml(val, k, indent, 1, seen)
   ));
 
-  return result.join('\n');
+  el.dataset.peek42HtmlEntry = true;
+  el.textContent = result.join('\n');
+
+  return el;
 }
 
 function chain(val) {
