@@ -332,29 +332,31 @@ function membersStr(val, indent = '  ', level = 0, leaf = val) {
     join('\n');
 }
 
-const _trackedReference = v =>
+const _trackedReference = (k, v, level) =>
   (typeof v === 'object' && v !== null &&
     v !== _getterTagDummy) ||
   typeof v === 'function';
-const _descendableObject = v =>
+const _descendableObject = (k, v, level) =>
   typeof v === 'object' && v !== null &&
     v !== _getterTagDummy;
-const _maybeConstructor = v =>
+const _maybeConstructor = (k, v, level) =>
   // Assumes typeof v === 'function'
   hasOwnProperty.call(v, 'prototype') &&
     v.name && v.name.match(/^[A-Z]/);
-const _descendableFunctionWhitelist = v =>
+const _descendableFunctionWhitelist = (k, v, level) =>
   // Assumes typeof v === 'function'
   v === Proxy ||
   (typeof _ === 'function' && v === _) ||
   (typeof $ === 'function' && v === $) ||
   (typeof p === 'function' && v === p);
-const _descendableFunction = v =>
-  typeof v === 'function' &&
-    (_maybeConstructor(v) || _descendableFunctionWhitelist(v));
+const _descendableFunction = (k, v, level) =>
+  typeof v === 'function' && (
+    _maybeConstructor(k, v, level) ||
+    _descendableFunctionWhitelist(k, v, level)
+  );
 
 const _shouldDescend = (k, v, level) =>
-  (_descendableObject(v) || _descendableFunction(v));
+  (_descendableObject(k, v, level) || _descendableFunction(k, v, level));
 
 function _inspectStr(val, k,
   indent = '  ', level = 1,
@@ -364,7 +366,7 @@ function _inspectStr(val, k,
   let v = mi.v;
   let result = [`${indent.repeat(level)}${mi.s}`];
 
-  if (!mi.seen && _trackedReference(v)) {
+  if (!mi.seen && _trackedReference(k, v, level)) {
     path.push(String(k));
     seen.push([path.join('.'), v]);
 
@@ -460,7 +462,7 @@ function _inspectHtml(elParent, val, k,
   let v = mi.v;
   let elNode = _appendInspectNode(elParent, '  ', mi.s);
 
-  if (!mi.seen && _trackedReference(v)) {
+  if (!mi.seen && _trackedReference(k, v, level)) {
     path.push(String(k));
     seen.push([path.join('.'), v]);
 
