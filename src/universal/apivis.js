@@ -536,6 +536,13 @@ function inspectHtml(val, indent = '  ') {
   return elEntry;
 }
 
+function apiHtml(val, indent = '  ') {
+  return chain(val).
+    reverse().
+    map((v, i) => `${indent.repeat(i)}[(html) ${typeStr(v, '__apivis__chain_link')}]\n${membersStr(v, indent, i + 1, val)}`).
+    join('\n');
+}
+
 // peek42 plugin
 function peek42(fnOutput, fnComment) {
   return {
@@ -617,6 +624,17 @@ function peek42(fnOutput, fnComment) {
         fnComment(comment, typeStr(val), 'api'),
         opts
       );
+    },
+    apiHtml(val, comment = undefined, opts = undefined) {
+      fnOutput(
+        apiHtml(val,
+          (opts && typeof opts.indent === 'string') ?
+            opts.indent :
+            undefined
+        ),
+        fnComment(comment, typeStr(val), 'api'),
+        opts
+      );
     }
   };
 }
@@ -636,6 +654,7 @@ const apivis = {
   chain,
   chainStr,
   apiStr,
+  apiHtml,
   peek42
 };
 
@@ -649,6 +668,7 @@ export {
   inspectHtml,
   chain,
   chainStr,
-  apiStr
+  apiStr,
+  apiHtml
 };
 export default apivis;
