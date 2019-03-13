@@ -397,6 +397,33 @@ function inspectStr(val, indent = '  ') {
   return result.join('\n');
 }
 
+function chain(val) {
+  let links = [val];
+
+  for (let link = Object.getPrototypeOf(val);
+    link;
+    link = Object.getPrototypeOf(link)
+  ) {
+    links.push(link);
+  }
+
+  return links;
+}
+
+function chainStr(val, indent = '  ') {
+  return chain(val).
+    reverse().
+    map((v, i) => `${indent.repeat(i)}[${typeStr(v, '__apivis__chain_link')}]`).
+    join('\n');
+}
+
+function apiStr(val, indent = '  ') {
+  return chain(val).
+    reverse().
+    map((v, i) => `${indent.repeat(i)}[${typeStr(v, '__apivis__chain_link')}]\n${membersStr(v, indent, i + 1, val)}`).
+    join('\n');
+}
+
 const _prependSibling = (elBefore, el) =>
   elBefore.parentNode.
     insertBefore(el, elBefore);
@@ -507,33 +534,6 @@ function inspectHtml(val, indent = '  ') {
   //elEntry.classList.add('peek42-dev');
 
   return elEntry;
-}
-
-function chain(val) {
-  let links = [val];
-
-  for (let link = Object.getPrototypeOf(val);
-    link;
-    link = Object.getPrototypeOf(link)
-  ) {
-    links.push(link);
-  }
-
-  return links;
-}
-
-function chainStr(val, indent = '  ') {
-  return chain(val).
-    reverse().
-    map((v, i) => `${indent.repeat(i)}[${typeStr(v, '__apivis__chain_link')}]`).
-    join('\n');
-}
-
-function apiStr(val, indent = '  ') {
-  return chain(val).
-    reverse().
-    map((v, i) => `${indent.repeat(i)}[${typeStr(v, '__apivis__chain_link')}]\n${membersStr(v, indent, i + 1, val)}`).
-    join('\n');
 }
 
 // peek42 plugin
