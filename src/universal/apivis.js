@@ -341,8 +341,10 @@ const _descendableObject = (k, v, level) =>
     v !== _getterTagDummy;
 const _maybeConstructor = (k, v, level) =>
   // Assumes typeof v === 'function'
-  hasOwnProperty.call(v, 'prototype') &&
-    v.name && v.name.match(/^[A-Z]/);
+  hasOwnProperty.call(v, 'prototype') && (
+    (v.name && v.name.match(/^[A-Z]/)) ||
+    (typeof k === 'string' && k.match(/^[A-Z]/))
+  );
 const _descendableFunctionWhitelist = (k, v, level) =>
   // Assumes typeof v === 'function'
   v === Proxy ||
