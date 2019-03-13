@@ -420,6 +420,7 @@ function _appendInspectNodeChildrenContainer(elNode, isRoot = false) {
   let elDisclosure = document.createElement('span');
   let elContainer = document.createElement('div');
 
+  // TODO: Manage styles via classes (take into account dark styles)
   elNode.addEventListener('click', () => {
     if (elContainer.style.display === 'none') {
       elDisclosure.textContent = '-';
