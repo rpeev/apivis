@@ -393,45 +393,115 @@ function inspectStr(val, indent = '  ') {
   return result.join('\n');
 }
 
-function _inspectHtml(val, k,
+const _prependSibling = (elBefore, el) =>
+  elBefore.parentNode.
+    insertBefore(el, elBefore);
+
+const _appendSibling = (elAfter, el) =>
+  elAfter.parentNode.
+    insertBefore(el, elAfter.nextElementSibling);
+
+function _appendInspectNode(elParent, indent, content) {
+  let elIndent = document.createElement('span');
+  let elContent = document.createElement('span');
+  let elNode = document.createElement('div');
+
+  elIndent.textContent = indent;
+  elContent.textContent = content;
+
+  elNode.appendChild(elIndent);
+  elNode.appendChild(elContent);
+
+  return elParent.appendChild(elNode), elNode;
+}
+
+function _appendInspectNodeChildrenContainer(elNode, isRoot = false) {
+  let elIndent = elNode.firstElementChild;
+  let elDisclosure = document.createElement('span');
+  let elContainer = document.createElement('div');
+
+  elNode.addEventListener('click', () => {
+    if (elContainer.style.display === 'none') {
+      elDisclosure.textContent = '-';
+      elNode.style.color = 'navy';
+      elContainer.style.display = '';
+    } else {
+      elDisclosure.textContent = '+';
+      elNode.style.color = 'blue';
+      elContainer.style.display = 'none';
+    }
+  });
+
+  if (isRoot) {
+    elDisclosure.textContent = '-';
+    elNode.style.color = 'navy';
+  } else {
+    elDisclosure.textContent = '+';
+    elNode.style.color = 'blue';
+    elContainer.style.display = 'none';
+    // TODO: Calculate exactly based on indent
+    elContainer.style.marginLeft = '1em';
+  }
+
+  elDisclosure.style.color = 'gray';
+  elContainer.style.borderLeft = '1px dashed gray';
+
+  _appendSibling(elIndent, elDisclosure);
+
+  return _appendSibling(elNode, elContainer), elContainer;
+}
+
+function _inspectHtml(elParent, val, k,
   indent = '  ', level = 1,
   seen = [['ROOT', val]], path = []
 ) {
   let mi = memberInfo(val, k, seen);
   let v = mi.v;
-  let result = [`${indent.repeat(level)}(html) ${mi.s}`];
+  let elNode = _appendInspectNode(elParent, '  ', mi.s);
 
   if (!mi.seen && _trackedReference(v)) {
     path.push(String(k));
     seen.push([path.join('.'), v]);
 
     if (_shouldDescend(k, v, level)) {
-      members(v).forEach(_k => result.push(
-        _inspectHtml(v, _k, indent, level + 1, seen, path)
-      ));
+      let children = members(v);
+
+      if (children.length > 0) {
+        let elContainer = _appendInspectNodeChildrenContainer(elNode);
+
+        children.forEach(_k => {
+          _inspectHtml(elContainer, v, _k, indent, level + 1, seen, path);
+        });
+      }
     }
 
     path.pop();
   }
 
-  return result.join('\n');
+  return elNode;
 }
 
 function inspectHtml(val, indent = '  ') {
   let st = typeStr(val);
   let sv = valueStr(val);
-  let result = [`(html) ${st}${(sv) ? `:${sv}` : ''}`];
-  let el = document.createElement('div');
+  let elEntry = document.createElement('div');
+  let elNode = _appendInspectNode(elEntry, '', `${st}${(sv) ? `:${sv}` : ''}`);
   let seen = [['ROOT', val]];
 
-  members(val).forEach(k => result.push(
-    _inspectHtml(val, k, indent, 1, seen)
-  ));
+  let children = members(val);
 
-  el.dataset.peek42HtmlEntry = true;
-  el.textContent = result.join('\n');
+  if (children.length > 0) {
+    let elContainer = _appendInspectNodeChildrenContainer(elNode, true);
 
-  return el;
+    children.forEach(k => {
+      _inspectHtml(elContainer, val, k, indent, 1, seen);
+    });
+  }
+
+  elEntry.dataset.peek42HtmlEntry = true;
+  //elEntry.classList.add('peek42-dev');
+
+  return elEntry;
 }
 
 function chain(val) {
@@ -510,14 +580,14 @@ function peek42(fnOutput, fnComment) {
         opts
       );
     },
-    inspect1(val, comment = undefined, opts = undefined) {
+    inspectHtml(val, comment = undefined, opts = undefined) {
       fnOutput(
         inspectHtml(val,
           (opts && typeof opts.indent === 'string') ?
             opts.indent :
             undefined
         ),
-        fnComment(comment, typeStr(val), 'inspect (html)'),
+        fnComment(comment, typeStr(val), 'inspect'),
         opts
       );
     },
