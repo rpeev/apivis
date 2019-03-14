@@ -604,9 +604,15 @@ function apiHtml(val, indent = '  ') {
         let elContainer = _appendApiNodeChildrenContainer(
           elNode, i, i === protos.length - 1
         );
+        //let seen = [['ROOT', v]];
+        //let path = [];
 
         children.forEach(k => {
-          _appendInspectNode(elContainer, '  ', memberStr(v, k, val));
+          //if (i === protos.length - 1) {
+          //  _inspectHtml(elContainer, v, k, '  ', i, seen, path);
+          //} else {
+            _appendInspectNode(elContainer, '  ', memberStr(v, k, val));
+          //}
         });
       }
     });
