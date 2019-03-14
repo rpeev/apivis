@@ -619,7 +619,7 @@ function apiHtml(val, indent = '  ') {
 
 // peek42 plugin
 function peek42(fnOutput, fnComment) {
-  return {
+  let plugin = {
     type(val, comment = undefined, opts = undefined) {
       fnOutput(
         typeStr(val),
@@ -655,7 +655,7 @@ function peek42(fnOutput, fnComment) {
         opts
       );
     },
-    inspect(val, comment = undefined, opts = undefined) {
+    inspectStr(val, comment = undefined, opts = undefined) {
       fnOutput(
         inspectStr(val,
           (opts && typeof opts.indent === 'string') ?
@@ -688,7 +688,7 @@ function peek42(fnOutput, fnComment) {
         opts
       );
     },
-    api(val, comment = undefined, opts = undefined) {
+    apiStr(val, comment = undefined, opts = undefined) {
       fnOutput(
         apiStr(val,
           (opts && typeof opts.indent === 'string') ?
@@ -711,6 +711,16 @@ function peek42(fnOutput, fnComment) {
       );
     }
   };
+
+  if (typeof window !== 'undefined') {
+    plugin.inspect = plugin.inspectHtml;
+    plugin.api = plugin.apiHtml;
+  } else {
+    plugin.inspect = plugin.inspectStr;
+    plugin.api = plugin.apiStr;
+  }
+
+  return plugin;
 }
 
 const apivis = {
