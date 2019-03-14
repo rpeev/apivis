@@ -455,7 +455,7 @@ function _appendInspectNodeChildrenContainer(elNode, isRoot = false) {
   elNode.addEventListener('click', () => {
     if (elContainer.style.display === 'none') {
       elDisclosure.textContent = '-';
-      elNode.style.color = 'navy';
+      elNode.style.color = 'purple';
       elContainer.style.display = '';
     } else {
       elDisclosure.textContent = '+';
@@ -466,7 +466,7 @@ function _appendInspectNodeChildrenContainer(elNode, isRoot = false) {
 
   if (isRoot) {
     elDisclosure.textContent = '-';
-    elNode.style.color = 'navy';
+    elNode.style.color = 'purple';
   } else {
     elDisclosure.textContent = '+';
     elNode.style.color = 'blue';
