@@ -623,6 +623,119 @@ function apiHtml(val, indent = '  ') {
   return elEntry;
 }
 
+function walk(elem, fnVisit, {
+  level = 0
+} = {}) {
+  fnVisit(elem, level);
+
+  for (let node = elem.firstChild;
+    node;
+    node = node.nextSibling
+  ) {
+    walk(node, fnVisit, {level: level + 1});
+  }
+
+  return elem;
+}
+
+let nodeTypeNames;
+
+if (typeof window !== 'undefined') {
+  nodeTypeNames = Object.keys(Node).
+    filter(k => k.match(/_NODE$/)).
+    reduce((obj, k) =>
+      (obj[Node[k]] = k.slice(0, -5).toLowerCase(), obj),
+      {__proto__: null}
+    );
+}
+
+function formatAttrs(attrs) {
+  return Array.from(attrs,
+    // TODO: Handle quotes within attribute value
+    attr => `${attr.name}="${attr.value}"`
+  );
+}
+
+function formatNode(types, node, level) {
+  let tag = (node.tagName && node.tagName.toLowerCase()) ||
+    nodeTypeNames[node.nodeType];
+
+  switch (node.nodeType) {
+  case Node.ELEMENT_NODE: {
+    let attrs = (types.has(Node.ATTRIBUTE_NODE)) ?
+      formatAttrs(node.attributes) :
+      [];
+
+    return (attrs.length > 0) ?
+      `${tag}(${attrs.join(', ')})` :
+      tag;
+  } case Node.COMMENT_NODE: {
+    /*let pad = '  '.repeat(level + 1);
+    let text = node.textContent.trim();
+    let lines = (text) ? text.split('\n') : [];
+    let text1 = lines.map(line => `${pad}|${line}`).join('\n');
+
+    return (text1) ? `${tag}\n${text1}` : tag;*/
+
+    let pad = '  '.repeat(level + 1);
+    let text = node.textContent.trim();
+
+    return (text) ? `${tag}\n${pad}${JSON.stringify(text)}` : tag;
+  } case Node.TEXT_NODE: {
+    /*let pad = '  '.repeat(level);
+    let text = node.textContent.trim();
+    let lines = (text) ? text.split('\n') : [];
+    let text1 = lines.map((line, i) => (i === 0) ?
+      `|${line}` :
+      `${pad}|${line}`
+    ).join('\n');
+
+    return text1;*/
+
+    let text = node.textContent.trim();
+
+    return (text) ? JSON.stringify(text) : '';
+  } default:
+    return tag;
+  }
+}
+
+function domHtml(elemOrSel = document, {
+  nodeTypes = [
+    Node.DOCUMENT_NODE,
+    Node.DOCUMENT_FRAGMENT_NODE,
+    Node.ELEMENT_NODE,
+    Node.ATTRIBUTE_NODE,
+    Node.COMMENT_NODE,
+    Node.TEXT_NODE,
+  ],
+  include = [],
+  exclude = [],
+  level = 0
+} = {}) {
+  elemOrSel = (typeof elemOrSel === 'string') ?
+    document.querySelector(elemOrSel) :
+    elemOrSel;
+  let types = new Set(
+    nodeTypes.concat(include).
+      filter(k => !exclude.includes(k))
+  );
+  let str = '';
+
+  walk(elemOrSel, (node, level) => {
+    if (types.has(node.nodeType)) {
+      let pad = '  '.repeat(level);
+      let s = formatNode(types, node, level);
+
+      if (s) {
+        str += `${pad}${s}\n`;
+      }
+    }
+  }, {level});
+
+  return str;
+}
+
 // peek42 plugin
 function peek42(fnOutput, fnComment) {
   let plugin = {
@@ -715,12 +828,20 @@ function peek42(fnOutput, fnComment) {
         fnComment(comment, typeStr(val), 'api'),
         opts
       );
+    },
+    domHtml(val, comment = undefined, opts = undefined) {
+      fnOutput(
+        domHtml(val, (opts || {}).dom),
+        fnComment(comment, typeStr(val), 'dom'),
+        opts
+      );
     }
   };
 
   if (typeof window !== 'undefined') {
     plugin.inspect = plugin.inspectHtml;
     plugin.api = plugin.apiHtml;
+    plugin.dom = plugin.domHtml;
   } else {
     plugin.inspect = plugin.inspectStr;
     plugin.api = plugin.apiStr;
