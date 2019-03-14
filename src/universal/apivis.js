@@ -536,11 +536,85 @@ function inspectHtml(val, indent = '  ') {
   return elEntry;
 }
 
+function _appendApiNode(elParent, indent, content) {
+  let elIndent = document.createElement('span');
+  let elContent = document.createElement('span');
+  let elNode = document.createElement('div');
+
+  elIndent.textContent = indent;
+  elContent.textContent = content;
+  elNode.style.color = 'purple';
+
+  elNode.appendChild(elIndent);
+  elNode.appendChild(elContent);
+
+  return elParent.appendChild(elNode), elNode;
+}
+
+function _appendApiNodeChildrenContainer(elNode, level = 0, expand = false) {
+  let elIndent = elNode.firstElementChild;
+  let elDisclosure = document.createElement('span');
+  let elContainer = document.createElement('div');
+
+  // TODO: Manage styles via classes (take into account dark styles)
+  elNode.addEventListener('click', () => {
+    if (elContainer.style.display === 'none') {
+      elDisclosure.textContent = '-';
+      elNode.style.color = 'purple';
+      elContainer.style.display = '';
+    } else {
+      elDisclosure.textContent = '+';
+      elNode.style.color = 'blue';
+      elContainer.style.display = 'none';
+    }
+  });
+
+  if (expand) {
+    elDisclosure.textContent = '-';
+    elNode.style.color = 'purple';
+  } else {
+    elDisclosure.textContent = '+';
+    elNode.style.color = 'blue';
+    elContainer.style.display = 'none';
+  }
+
+  elDisclosure.style.color = 'gray';
+  elContainer.style.borderLeft = '1px dashed gray';
+  // TODO: Calculate exactly based on indent
+  elContainer.style.marginLeft = `${level}em`;
+
+  _appendSibling(elIndent, elDisclosure);
+
+  return _appendSibling(elNode, elContainer), elContainer;
+}
+
 function apiHtml(val, indent = '  ') {
-  return chain(val).
+  let protos = chain(val);
+  let elEntry = document.createElement('div');
+
+  protos.
     reverse().
-    map((v, i) => `${indent.repeat(i)}[(html) ${typeStr(v, '__apivis__chain_link')}]\n${membersStr(v, indent, i + 1, val)}`).
-    join('\n');
+    forEach((v, i) => {
+      let st = `[${typeStr(v, '__apivis__chain_link')}]`;
+      let elNode = _appendApiNode(elEntry, indent.repeat(i), st);
+
+      let children = members(v);
+
+      if (children.length > 0) {
+        let elContainer = _appendApiNodeChildrenContainer(
+          elNode, i, i === protos.length - 1
+        );
+
+        children.forEach(k => {
+          _appendInspectNode(elContainer, '  ', memberStr(v, k, val));
+        });
+      }
+    });
+
+  elEntry.dataset.peek42HtmlEntry = true;
+  //elEntry.classList.add('peek42-dev');
+
+  return elEntry;
 }
 
 // peek42 plugin
