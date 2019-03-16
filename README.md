@@ -71,8 +71,11 @@ The following properties/functions are available through the **apivis** namespac
 - `members(val)` - returns (sorted) array of all *own* `val` property names (including symbols)
 - `membersStr(val, indent = '  ', level = 0)` - returns string representation of all *own* `val` property names (including symbols) with type and own property descriptor information and the values of the primitive booleans, numbers and strings, separated by a newline and indented accordingly
 - `inspectStr(val, indent = '  ')` - returns string representation of `val` property tree similar to `JSON.stringify` but much more thorough (includes symbol and string keys and *all* values, handles circular refs, displays the path of keys to reach to already encountered ref)
+- `inspectHtml(val, indent = '  ')` - `inspectStr` variant returning collapsible/expandable DOM representation
 - `chain(val)` - returns the prototype chain of `val` (an array, `val` is first, the root is last)
 - `chainStr(val, indent = '  ')` - returns string representation of `val` prototype chain
 - `apiStr(val, indent = '  ')` - returns string representation of `val` API tree
+- `apiHtml(val, indent = '  ')` - `apiStr` variant returning collapsible/expandable DOM representation
+- `domHtml(val, indent = '  ')` - `peek42.p.domStr` variant returning collapsible/expandable DOM representation
 
 See the **example** folder for node and browser examples respectively
