@@ -623,16 +623,20 @@ function apiHtml(val, indent = '  ') {
   return elEntry;
 }
 
-function walk(elem, fnVisit, {
+function walk(elParent, elem, fnVisit, {
   level = 0
 } = {}) {
-  fnVisit(elem, level);
+  let elNode = fnVisit(elParent, elem, level);
+
+  if (elNode && elem.firstChild) {
+    elParent = _appendInspectNodeChildrenContainer(elNode, level === 0);
+  }
 
   for (let node = elem.firstChild;
     node;
     node = node.nextSibling
   ) {
-    walk(node, fnVisit, {level: level + 1});
+    walk(elParent, node, fnVisit, {level: level + 1});
   }
 
   return elem;
@@ -670,28 +674,10 @@ function formatNode(types, node, level) {
       `${tag}(${attrs.join(', ')})` :
       tag;
   } case Node.COMMENT_NODE: {
-    /*let pad = '  '.repeat(level + 1);
-    let text = node.textContent.trim();
-    let lines = (text) ? text.split('\n') : [];
-    let text1 = lines.map(line => `${pad}|${line}`).join('\n');
-
-    return (text1) ? `${tag}\n${text1}` : tag;*/
-
-    let pad = '  '.repeat(level + 1);
     let text = node.textContent.trim();
 
-    return (text) ? `${tag}\n${pad}${JSON.stringify(text)}` : tag;
+    return `//${JSON.stringify(text)}`;
   } case Node.TEXT_NODE: {
-    /*let pad = '  '.repeat(level);
-    let text = node.textContent.trim();
-    let lines = (text) ? text.split('\n') : [];
-    let text1 = lines.map((line, i) => (i === 0) ?
-      `|${line}` :
-      `${pad}|${line}`
-    ).join('\n');
-
-    return text1;*/
-
     let text = node.textContent.trim();
 
     return (text) ? JSON.stringify(text) : '';
@@ -720,20 +706,27 @@ function domHtml(elemOrSel = document, {
     nodeTypes.concat(include).
       filter(k => !exclude.includes(k))
   );
-  let str = '';
+  let elEntry = document.createElement('div');
 
-  walk(elemOrSel, (node, level) => {
+  walk(elEntry, elemOrSel, (elParent, node, level) => {
+    let elNode;
+
     if (types.has(node.nodeType)) {
-      let pad = '  '.repeat(level);
-      let s = formatNode(types, node, level);
+      let pad = (level > 0) ? '  ' : '';
+      let sn = formatNode(types, node, level);
 
-      if (s) {
-        str += `${pad}${s}\n`;
+      if (sn) {
+        elNode = _appendInspectNode(elParent, pad, sn);
       }
     }
+
+    return elNode;
   }, {level});
 
-  return str;
+  elEntry.dataset.peek42HtmlEntry = true;
+  //elEntry.classList.add('peek42-dev');
+
+  return elEntry;
 }
 
 // peek42 plugin
@@ -832,7 +825,7 @@ function peek42(fnOutput, fnComment) {
     domHtml(val, comment = undefined, opts = undefined) {
       fnOutput(
         domHtml(val, (opts || {}).dom),
-        fnComment(comment, typeStr(val), 'dom'),
+        fnComment(comment, typeStr(val || document), 'dom'),
         opts
       );
     }
