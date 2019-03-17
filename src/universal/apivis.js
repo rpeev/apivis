@@ -132,7 +132,14 @@ function descStr(val, k) {
     return 'n/a';
   }
 
-  let desc = Object.getOwnPropertyDescriptor(val, k);
+  let desc;
+
+  try {
+    desc = Object.getOwnPropertyDescriptor(val, k);
+  } catch (err) {
+    return 'n/a';
+  }
+
   let d1 = '';
   let d2 = '';
 
@@ -157,12 +164,19 @@ const _getterTagDummy = {
 };
 
 const _noop = () => {};
-const _swallowPromiseRejection = v => (
-  (typeof v === 'object' && v !== null &&
-    v !== Promise.prototype && typeof v.catch === 'function' &&
-      v.catch(_noop)),
-  v
-);
+const _swallowPromiseRejection = v => {
+  if (typeof v === 'object' && v !== null &&
+    v !== Promise.prototype && typeof v.catch === 'function'
+  ) {
+    // v might be some other kind of Promise.prototype
+    // (like originalPromise.prototype in RN/Expo)
+    try {
+      v.catch(_noop);
+    } catch (err) {}
+  }
+
+  return v;
+};
 
 function memberStr(val, k, leaf = val) {
   let sk = String(k);
