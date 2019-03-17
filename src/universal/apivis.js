@@ -644,7 +644,7 @@ function walk(elParent, elem, fnVisit, {
 
 let nodeTypeNames;
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && typeof Node !== 'undefined') {
   nodeTypeNames = Object.keys(Node).
     filter(k => k.match(/_NODE$/)).
     reduce((obj, k) =>
