@@ -874,6 +874,7 @@ const apivis = {
   chainStr,
   apiStr,
   apiHtml,
+  domHtml,
   peek42
 };
 
@@ -888,6 +889,7 @@ export {
   chain,
   chainStr,
   apiStr,
-  apiHtml
+  apiHtml,
+  domHtml
 };
 export default apivis;
