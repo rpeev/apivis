@@ -134,6 +134,7 @@ function descStr(val, k) {
 
   let desc;
 
+  // Retrieving own property descriptor for 'caller' might throw
   try {
     desc = Object.getOwnPropertyDescriptor(val, k);
   } catch (err) {
