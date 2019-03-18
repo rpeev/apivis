@@ -1,5 +1,9 @@
 # Release Notes
 
+## 6.4.1
+
+- Fixes for problematic property access cases
+
 ## 6.4.0
 
 - Add `inspectHtml`, `apiHtml` and `domHtml` functions returning collapsible/expandable DOM representations
