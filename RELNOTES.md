@@ -1,5 +1,9 @@
 # Release Notes
 
+## 6.4.2
+
+- Add missing exports
+
 ## 6.4.1
 
 - Fixes for problematic property access cases
