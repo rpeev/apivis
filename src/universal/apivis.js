@@ -82,7 +82,12 @@ function typeStr(val, k = undefined) {
       t = val.name;
     }
 
-    t = `${t}(${_argsStr(val.length)})`;
+    // Accessing the length prop might throw in some cases involving proxies
+    try {
+      t = `${t}(${_argsStr(val.length)})`;
+    } catch (err) {
+      t = `${t}(n/a)`;
+    }
   }
 
   if (val && (
